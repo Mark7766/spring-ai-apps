@@ -1,4 +1,9 @@
-# 这是一个展示Spring AI Function Calling的Demo，大模型可以根据提问，调用不同的API，解决大模型没有的最新知识问题，可以实现大模型自动处理一些任务
+# 这个应用是做什么的
+这是一个展示Spring AI Function Calling的Demo，大模型可以根据提问，调用不同的API，解决大模型没有的最新知识问题，可以实现大模型自动处理一些任务
+# Ollama 安装
+[Download and install Ollama](https://ollama.com/download)
+# 安装千问模型
+ollama pull qwen2.5
 # 启动
 IDE spring-boot:run -DskipTest
 # 访问 http://localhost:8081/index.html
