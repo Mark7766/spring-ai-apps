@@ -1,0 +1,23 @@
+server:
+  port: 8081
+spring:
+  application:
+    name: "newston"
+  ai:
+    dashscope:
+      api-key: ${BL_API_KEY}
+      chat:
+        enabled: ${DASHSCOPE_ENABLED:false}
+    openai:
+      chat:
+        enabled: ${DEEPSEEK_ENABLED:false}
+    ollama:
+      chat:
+        enabled: ${OLLAMA_ENABLED:true}
+sandy:
+  newston:
+    sender-email: ${SENDER_EMAIL}
+    sender-password: ${SENDER_PASSWORD}
+    receiver-email: ${RECEIVER_EMAIL}
+    bl-mode: ${BL_MODE}
+    schedule: ${NEWSTON_CRON:0 0 0/6 * * ?}
