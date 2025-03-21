@@ -1,6 +1,6 @@
 # spring-ai-apps
 这个是一个Spring AI小应用的集合，目的是帮忙大家轻松的学习如何应用Spring AI进行AI应用开发，减轻认知负担，每个小应用代码都很少，但框架都搭建好了，解决各种版本冲突的问题
-# Spring AI 小应用列表，帮助大家学习
+# Spring AI 小应用列表:
 - [chat-deepseek](chat-deepseek):基于DeepSeek的聊天应用
 - [embeddings-ollama](embeddings-ollama): ollama+qwen2.5的私有数据的向量化后的问答应用
 - [chroma-ollama](chroma-ollama):ollama+qwen2.5+chroma的私有pdf数据的向量存储的问答应用
