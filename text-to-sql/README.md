@@ -71,6 +71,8 @@ curl --location 'localhost:8081/sandy/training' \
     "content": "CREATE TABLE dtp_hospital (id SERIAL PRIMARY KEY, province VARCHAR(20) DEFAULT NULL, city VARCHAR(20) DEFAULT NULL, reporting_team VARCHAR(50) DEFAULT NULL, district VARCHAR(20) DEFAULT NULL, hospital_name VARCHAR(100) DEFAULT NULL, hospital_code VARCHAR(50) DEFAULT NULL, hospital_address VARCHAR(255) DEFAULT NULL, location VARCHAR(100) DEFAULT NULL, del_flag INTEGER DEFAULT 0, create_by VARCHAR(32) DEFAULT NULL, create_time TIMESTAMP DEFAULT NULL, update_by VARCHAR(32) DEFAULT NULL, update_time TIMESTAMP DEFAULT NULL, image VARCHAR(255) DEFAULT NULL); COMMENT ON TABLE dtp_hospital IS '\''医院表'\''; COMMENT ON COLUMN dtp_hospital.id IS '\''主键'\''; COMMENT ON COLUMN dtp_hospital.province IS '\''省份'\''; COMMENT ON COLUMN dtp_hospital.city IS '\''城市'\''; COMMENT ON COLUMN dtp_hospital.reporting_team IS '\''提报团队'\''; COMMENT ON COLUMN dtp_hospital.district IS '\''区'\''; COMMENT ON COLUMN dtp_hospital.hospital_name IS '\''申请的DTP药房 主要对应的医院名称'\''; COMMENT ON COLUMN dtp_hospital.hospital_code IS '\''申请DTP主要对应的医院code'\''; COMMENT ON COLUMN dtp_hospital.hospital_address IS '\''医院具体地址'\''; COMMENT ON COLUMN dtp_hospital.location IS '\''医院所在经纬度'\''; COMMENT ON COLUMN dtp_hospital.del_flag IS '\''删除状态 0正常 1已删除'\''; COMMENT ON COLUMN dtp_hospital.create_by IS '\''创建人'\''; COMMENT ON COLUMN dtp_hospital.create_time IS '\''创建时间'\''; COMMENT ON COLUMN dtp_hospital.update_by IS '\''更新人'\''; COMMENT ON COLUMN dtp_hospital.update_time IS '\''更新时间'\''; COMMENT ON COLUMN dtp_hospital.image IS '\''图片'\'';",
     "policy":"DDL"
 }'
+返回：
+{"code":200,"message":"请求成功","data":null}
 ```
 ### 添加数据库SQL训练数据
 ```
@@ -81,7 +83,36 @@ curl --location 'localhost:8081/sandy/training' \
     "content": "SELECT * FROM DTP_HOSPITAL WHERE DISTRICT LIKE '\''%黄浦区%'\''",
     "policy":"SQL"
 }'
+返回：
+{"code":200,"message":"请求成功","data":null}
 ```
+### 查询数据库训练数据列表
+```
+curl --location 'localhost:8081/sandy/training?question=%22%22' \
+--data ''
+返回：
+{"code":200,"message":"请求成功","data":[{"id":"aa321b9f-a683-4a5e-a233-0902b3548daf","text":"CREATE TABLE dtp_hospital (id SERIAL PRIMARY KEY, province VARCHAR(20) DEFAULT NULL, city VARCHAR(20) DEFAULT NULL, reporting_team VARCHAR(50) DEFAULT NULL, district VARCHAR(20) DEFAULT NULL, hospital_name VARCHAR(100) DEFAULT NULL, hospital_code VARCHAR(50) DEFAULT NULL, hospital_address VARCHAR(255) DEFAULT NULL, location VARCHAR(100) DEFAULT NULL, del_flag INTEGER DEFAULT 0, create_by VARCHAR(32) DEFAULT NULL, create_time TIMESTAMP DEFAULT NULL, update_by VARCHAR(32) DEFAULT NULL, update_time TIMESTAMP DEFAULT NULL, image VARCHAR(255) DEFAULT NULL); COMMENT ON TABLE dtp_hospital IS '医院表'; COMMENT ON COLUMN dtp_hospital.id IS '主键'; COMMENT ON COLUMN dtp_hospital.province IS '省份'; COMMENT ON COLUMN dtp_hospital.city IS '城市'; COMMENT ON COLUMN dtp_hospital.reporting_team IS '提报团队'; COMMENT ON COLUMN dtp_hospital.district IS '区'; COMMENT ON COLUMN dtp_hospital.hospital_name IS '申请的DTP药房 主要对应的医院名称'; COMMENT ON COLUMN dtp_hospital.hospital_code IS '申请DTP主要对应的医院code'; COMMENT ON COLUMN dtp_hospital.hospital_address IS '医院具体地址'; COMMENT ON COLUMN dtp_hospital.location IS '医院所在经纬度'; COMMENT ON COLUMN dtp_hospital.del_flag IS '删除状态 0正常 1已删除'; COMMENT ON COLUMN dtp_hospital.create_by IS '创建人'; COMMENT ON COLUMN dtp_hospital.create_time IS '创建时间'; COMMENT ON COLUMN dtp_hospital.update_by IS '更新人'; COMMENT ON COLUMN dtp_hospital.update_time IS '更新时间'; COMMENT ON COLUMN dtp_hospital.image IS '图片';","media":null,"metadata":{"distance":0.7830759,"script_type":"DDL"},"score":0.21692407131195068},{"id":"862f3850-0d85-4720-b354-88853a85c9fa","text":"{\"question\":\"在黄浦区的医院有哪些？\",\"content\":\"SELECT * FROM DTP_HOSPITAL WHERE DISTRICT LIKE '%黄浦区%'\",\"policy\":\"SQL\"}","media":null,"metadata":{"distance":0.871068,"script_type":"SQL"},"score":0.12893199920654297}]}
+```
+### 添加数据库Document训练数据
+```
+curl --location 'localhost:8081/sandy/training' \
+--header 'Content-Type: application/json' \
+--data '{
+    "content": "test",
+    "policy":"DOCUMENTATION"
+}'
+返回：
+{"code":200,"message":"请求成功","data":null}
+```
+### 删除数据库训练数据
+```
+curl --location --request DELETE 'localhost:8081/sandy/training/6a003036-e205-47db-98b8-9fa0e1276579' \
+--data ''
+返回：
+{"code":200,"message":"请求成功","data":null}
+```
+
+
 
 ### 提问自然语言查询数据
 - 浏览器调用
