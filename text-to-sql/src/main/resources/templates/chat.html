@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>星际问答</title>
+    <style>
+        /* 重置和基础样式 */
+        html, body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            width: 100%;
+            overflow: hidden;
+            background: linear-gradient(135deg, #0d1b2a 0%, #1b263b 100%);
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        .chat-container {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            box-sizing: border-box;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" opacity="0.1"><circle cx="50" cy="50" r="40" stroke="cyan" stroke-width="2" fill="none"/></svg>') repeat;
+        }
+
+        .messages {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding: 20px;
+            background: rgba(10, 25, 47, 0.8);
+            border: 1px solid #00ffff;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
+        }
+
+        .message {
+            display: flex;
+            align-items: flex-start;
+            margin: 15px 0;
+            max-width: 70%;
+        }
+
+        .user-message {
+            flex-direction: row;
+        }
+
+        .ai-message {
+            flex-direction: row-reverse;
+            margin-left: auto;
+        }
+
+        .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin: 0 10px;
+            border: 2px solid #00ffff;
+            box-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+        }
+
+        .message-content {
+            padding: 15px;
+            border-radius: 10px;
+            position: relative;
+            word-wrap: break-word;
+        }
+
+        .user-message .message-content {
+            background: linear-gradient(45deg, #1e3c72, #2a5298);
+            color: white;
+            box-shadow: 0 0 15px rgba(42, 82, 152, 0.5);
+        }
+
+        .ai-message .message-content {
+            background: linear-gradient(45deg, #0f3443, #34e89e);
+            color: white;
+            box-shadow: 0 0 15px rgba(52, 232, 158, 0.5);
+        }
+
+        .input-area {
+            display: flex;
+            gap: 15px;
+            padding: 10px;
+            background: rgba(10, 25, 47, 0.9);
+            border-top: 1px solid #00ffff;
+        }
+
+        #question {
+            flex-grow: 1;
+            padding: 12px;
+            font-size: 16px;
+            border: 1px solid #00ffff;
+            border-radius: 5px;
+            background: rgba(255, 255, 255, 0.1);
+            color: #00ffff;
+            box-shadow: 0 0 10px rgba(0, 255, 255, 0.2);
+        }
+
+        #question::placeholder {
+            color: #66cccc;
+        }
+
+        button {
+            padding: 12px 25px;
+            font-size: 16px;
+            background: linear-gradient(45deg, #00ffff, #00b7eb);
+            color: #0d1b2a;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.5);
+            transition: all 0.3s;
+        }
+
+        button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.8);
+        }
+    </style>
+</head>
+<body>
+<div class="chat-container">
+    <div class="messages" id="messages"></div>
+    <div class="input-area">
+        <input type="text" id="question" placeholder="向星际智脑提问...">
+        <button onclick="sendQuestion()">发送</button>
+    </div>
+</div>
+
+<script>
+    function sendQuestion() {
+        const question = document.getElementById('question').value;
+        if (!question) return;
+
+        document.getElementById('question').value = '';
+        appendMessage(question, true);
+
+        fetch('http://localhost:8081/sandy/chat', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ question: question })
+        })
+        .then(response => {
+            const reader = response.body.getReader();
+            const decoder = new TextDecoder();
+
+            function readStream() {
+                reader.read().then(({ done, value }) => {
+                    if (done) {
+                        console.log('Stream complete');
+                        return;
+                    }
+
+                    const chunk = decoder.decode(value);
+                    const lines = chunk.split('\n');
+                    lines.forEach(line => {
+                        if (line.trim()) {
+                            const message = line.startsWith('data: ') ? line.slice(6) : line;
+                            appendMessage(message, false);
+                        }
+                    });
+
+                    readStream();
+                });
+            }
+
+            readStream();
+        })
+        .catch(error => {
+            appendMessage('错误: ' + error.message, false);
+        });
+    }
+
+    function appendMessage(message, isUser = false) {
+        const messagesDiv = document.getElementById('messages');
+        const messageDiv = document.createElement('div');
+        messageDiv.className = `message ${isUser ? 'user-message' : 'ai-message'}`;
+
+        const avatar = document.createElement('img');
+        avatar.className = 'avatar';
+        avatar.src = isUser
+            ? 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="cyan" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>'
+            : 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="lime" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>';
+
+        const contentDiv = document.createElement('div');
+        contentDiv.className = 'message-content';
+        contentDiv.innerHTML = message;
+
+        messageDiv.appendChild(avatar);
+        messageDiv.appendChild(contentDiv);
+        messagesDiv.appendChild(messageDiv);
+        messagesDiv.scrollTop = messagesDiv.scrollHeight;
+    }
+
+    document.getElementById('question').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            sendQuestion();
+        }
+    });
+</script>
+</body>
+</html>

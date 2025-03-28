@@ -1,0 +1,57 @@
+server:
+  port: 8081
+spring:
+  application:
+    name: "text-to-sql"
+  mvc:
+    async:
+      request-timeout=600000:
+  web:
+    resources:
+      static-locations: file:./generated/,classpath:/static/,classpath:/templates/
+  #支持MySQL8和PostgreSQL12
+  datasource:
+    driver-class-name: ${TEXT_TO_SQL_DRIVERE:org.postgresql.Driver}
+    url: ${TEXT_TO_SQL_URL:jdbc:postgresql://localhost:5432/postgres}
+    username: ${TEXT_TO_SQL_USER:postgres}
+    password: ${TEXT_TO_SQL_PASSWORD:123456}
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 5
+      connection-timeout: 30000
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    open-in-view: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+        jdbc:
+          batch_size: 50
+        order_inserts: true
+        order_updates: true
+  ai:
+    #  当使用 Ollama时，请配置以下参数
+    ollama:
+      base-url: ${TEXT_TO_SQL_OLLAMA_URL:http://localhost:11434}
+      chat:
+        model: ${TEXT_TO_SQL_OLLAMA_MODEL:qwen2.5}
+        enabled: ${TEXT_TO_SQL_OLLAMA_ENABLED:true}
+        options:
+          model: ${TEXT_TO_SQL_OLLAMA_MODEL:qwen2.5}
+          temperature: ${TEXT_TO_SQL_OLLAMA_TEMPERATURE:0.7}
+      embedding:
+        enabled: ${TEXT_TO_SQL_OLLAMA_ENABLED:true}
+        options:
+          model: ${TEXT_TO_SQL_MODEL:qwen2.5}
+      init:
+        pull-model-strategy: never
+    vectorstore:
+      chroma:
+        client:
+          host: ${TEXT_TO_SQL_CHROMA_URL:http://localhost}
+          port: ${TEXT_TO_SQL_CHROMA_PORT:8000}
+        collection-name: ${TEXT_TO_SQL_CHROMA_COLLECTION:sandy}
+        initialize-schema: ${TEXT_TO_SQL_CHROMA_COLLECTION_INITIALIZE:true}

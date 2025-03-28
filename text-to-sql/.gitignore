@@ -1,28 +1,23 @@
-*/HELP.md
-*/target/
-*/.mvn
-*/*.txt
-*/*.db
+HELP.md
+target/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
-*/generated
 
 ### STS ###
-./*/.apt_generated
-./*/.classpath
-./*/.factorypath
-./*/.project
-./*/.settings
-./*/.springBeans
-./*/.sts4-cache
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
 
 ### IntelliJ IDEA ###
 .idea
-*/.idea
-*/*.iws
-*/*.iml
-*/*.ipr
+*.iws
+*.iml
+*.ipr
 
 ### NetBeans ###
 /nbproject/private/
