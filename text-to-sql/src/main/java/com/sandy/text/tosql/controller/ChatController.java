@@ -153,7 +153,7 @@ public class ChatController {
                 object.set(executeSql(sql.get()));
                 doSend(emitter,"<br>查询到数据：" + JsonParser.toJson(object)+"<br>生成图表中...");
                 htmlfile.set(generateHtml(chatReq.getQuestion(), object));
-                doSend(emitter,"<br><iframe src=\"" + htmlfile + "\" width=\"800\" height=\"500\" frameborder=\"0\" title=\"" + chatReq.getQuestion() + "\"></iframe>");
+                doSend(emitter,"<br><iframe src=\"" + htmlfile + "\" width=\"100%\" height=\"100%\" frameborder=\"0\" title=\"" + chatReq.getQuestion() + "\"></iframe>");
                 emitter.complete();
             } catch (IOException e) {
                 emitter.completeWithError(e);

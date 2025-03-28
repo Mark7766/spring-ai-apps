@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>星际数据库训练中心</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron&display=swap" rel="stylesheet">
   <style>
     html, body {
         margin: 0;
@@ -21,62 +22,69 @@
         padding: 20px;
         box-sizing: border-box;
         display: flex;
-        flex-direction: column;
         background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" opacity="0.1"><circle cx="50" cy="50" r="40" stroke="cyan" stroke-width="2" fill="none"/></svg>') repeat;
     }
 
-    .header {
-        padding: 15px;
-        background: rgba(10, 25, 47, 0.9);
-        border-bottom: 1px solid #00ffff;
-        box-shadow: 0 0 15px rgba(0, 255, 255, 0.3);
-        text-align: center;
-        font-size: 24px;
-        text-transform: uppercase;
-    }
-
-    .main-content {
-        flex-grow: 1;
-        display: flex;
-        gap: 20px;
+    .left-panel {
+        width: 40%;
         padding: 20px;
-    }
-
-    .input-section, .list-section {
-        flex: 1;
         background: rgba(10, 25, 47, 0.8);
-        border: 1px solid #00ffff;
-        border-radius: 10px;
-        padding: 20px;
+        border-right: 1px solid #00ffff;
         box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
-        overflow-y: auto;
+    }
+
+    .right-panel {
+        width: 60%;
+        padding: 20px;
+        overflow-y: auto; /* 添加垂直滚动条 */
+        max-height: calc(100vh - 40px); /* 限制高度为视口高度减去padding */
+        scrollbar-width: thin; /* Firefox 滚动条样式 */
+        scrollbar-color: #00ffff rgba(10, 25, 47, 0.8); /* Firefox 滚动条颜色 */
+    }
+
+    /* Webkit 浏览器（如 Chrome、Safari）的滚动条样式 */
+    .right-panel::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    .right-panel::-webkit-scrollbar-track {
+        background: rgba(10, 25, 47, 0.8);
+        border-radius: 4px;
+    }
+
+    .right-panel::-webkit-scrollbar-thumb {
+        background: #00ffff;
+        border-radius: 4px;
+        box-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+    }
+
+    .right-panel::-webkit-scrollbar-thumb:hover {
+        background: #00b7eb;
+    }
+
+    h1 {
+        text-align: center;
+        text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
     }
 
     .form-group {
-        margin-bottom: 20px;
+        margin: 20px 0;
     }
 
-    label {
-        display: block;
-        margin-bottom: 5px;
-        color: #66cccc;
-    }
-
-    select, textarea {
+    select, textarea, input {
         width: 100%;
         padding: 10px;
         background: rgba(255, 255, 255, 0.1);
         border: 1px solid #00ffff;
         border-radius: 5px;
         color: #00ffff;
-        font-size: 16px;
-        box-sizing: border-box;
-        resize: vertical;
+        font-size: 14px;
+        box-shadow: 0 0 10px rgba(0, 255, 255, 0.2);
     }
 
     textarea {
         height: 200px;
-        font-family: 'Courier New', monospace;
+        resize: vertical;
     }
 
     button {
@@ -100,65 +108,53 @@
     }
 
     .training-item {
-        background: linear-gradient(45deg, #1e3c72, #2a5298);
+        background: rgba(10, 25, 47, 0.9);
         padding: 15px;
-        margin-bottom: 10px;
+        margin: 10px 0;
+        border: 1px solid #00ffff;
         border-radius: 5px;
-        box-shadow: 0 0 10px rgba(42, 82, 152, 0.5);
-        position: relative;
+        box-shadow: 0 0 15px rgba(0, 255, 255, 0.3);
     }
 
     .training-item pre {
-        margin: 0;
+        margin: 10px 0;
         white-space: pre-wrap;
         word-wrap: break-word;
-        color: white;
     }
 
     .delete-btn {
-        position: absolute;
-        top: 10px;
-        right: 10px;
-        background: linear-gradient(45deg, #ff4444, #ff7777);
-        padding: 5px 10px;
-        font-size: 14px;
+        background: linear-gradient(45deg, #ff4444, #ff8787);
+        float: right;
     }
   </style>
 </head>
 <body>
 <div class="container">
-  <div class="header">星际数据库训练中心</div>
-  <div class="main-content">
-    <div class="input-section">
-      <h2>添加训练数据</h2>
-      <div class="form-group">
-        <label>数据类型</label>
-        <select id="policy">
-          <option value="DDL">DDL</option>
-          <option value="SQL">SQL</option>
-          <option value="DOCUMENTATION">Document</option>
-        </select>
-      </div>
-      <div class="form-group" id="question-group" style="display: none;">
-        <label>问题 (仅SQL需要)</label>
-        <textarea id="question"></textarea>
-      </div>
-      <div class="form-group">
-        <label>内容</label>
-        <textarea id="content"></textarea>
-      </div>
-      <button onclick="addTrainingData()">提交训练数据</button>
+  <div class="left-panel">
+    <h1>数据训练控制台</h1>
+    <div class="form-group">
+      <select id="policy">
+        <option value="DDL">DDL</option>
+        <option value="SQL">SQL</option>
+        <option value="DOCUMENTATION">DOCUMENTATION</option>
+      </select>
     </div>
-    <div class="list-section">
-      <h2>训练数据列表</h2>
-      <button onclick="fetchTrainingData()">刷新列表</button>
-      <div class="training-list" id="training-list"></div>
+    <div class="form-group" id="question-group" style="display: none;">
+      <input type="text" id="question" placeholder="请输入问题（仅SQL需要）">
+      ]]>            </div>
+    <div class="form-group">
+      <textarea id="content" placeholder="请输入训练内容"></textarea>
     </div>
+    <button onclick="addTrainingData()">添加训练数据</button>
+  </div>
+  <div class="right-panel">
+    <h1>训练数据列表</h1>
+    <div class="training-list" id="training-list"></div>
   </div>
 </div>
 
 <script>
-  // 根据policy切换问题输入框显示
+  // 切换policy时显示/隐藏question输入框
   document.getElementById('policy').addEventListener('change', function() {
       const questionGroup = document.getElementById('question-group');
       questionGroup.style.display = this.value === 'SQL' ? 'block' : 'none';
@@ -170,27 +166,34 @@
       const content = document.getElementById('content').value;
       const question = document.getElementById('question').value;
 
-      let data = { content, policy };
-      if (policy === 'SQL') {
-          if (!question) {
-              alert('SQL类型需要填写问题');
-              return;
-          }
-          data.question = question;
+      if (!content) {
+          alert('请输入训练内容');
+          return;
       }
+
+      if (policy === 'SQL' && !question) {
+          alert('SQL类型需要输入问题');
+          return;
+      }
+
+      const data = policy === 'SQL'
+          ? { question, content, policy }
+          : { content, policy };
 
       fetch('http://localhost:8081/sandy/training', {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: {
+              'Content-Type': 'application/json'
+          },
           body: JSON.stringify(data)
       })
       .then(response => response.json())
       .then(result => {
           if (result.code === 200) {
-              alert('训练数据添加成功');
+              alert('添加成功');
               document.getElementById('content').value = '';
               document.getElementById('question').value = '';
-              fetchTrainingData();
+              loadTrainingData();
           } else {
               alert('添加失败: ' + result.message);
           }
@@ -198,31 +201,32 @@
       .catch(error => alert('错误: ' + error.message));
   }
 
-  // 获取训练数据列表
-  function fetchTrainingData() {
-      fetch('http://localhost:8081/sandy/training?question=%22%22')
+  // 加载训练数据列表
+  function loadTrainingData() {
+      fetch('http://localhost:8081/sandy/training?question=""')
       .then(response => response.json())
       .then(result => {
           if (result.code === 200) {
               const list = document.getElementById('training-list');
               list.innerHTML = '';
               result.data.forEach(item => {
-                  const itemDiv = document.createElement('div');
-                  itemDiv.className = 'training-item';
-                  itemDiv.innerHTML = `
-                      <pre>Type: ${item.metadata.script_type}\n${item.text}</pre>
+                  const div = document.createElement('div');
+                  div.className = 'training-item';
+                  div.innerHTML = `
+                      <p>类型: ${item.metadata.script_type}</p>
+                      <pre>${item.text}</pre>
                       <button class="delete-btn" onclick="deleteTrainingData('${item.id}')">删除</button>
                   `;
-                  list.appendChild(itemDiv);
+                  list.appendChild(div);
               });
           }
       })
-      .catch(error => alert('获取列表失败: ' + error.message));
+      .catch(error => alert('加载列表失败: ' + error.message));
   }
 
   // 删除训练数据
   function deleteTrainingData(id) {
-      if (!confirm('确认删除此训练数据?')) return;
+      if (!confirm('确定要删除此训练数据吗？')) return;
 
       fetch(`http://localhost:8081/sandy/training/${id}`, {
           method: 'DELETE'
@@ -231,7 +235,7 @@
       .then(result => {
           if (result.code === 200) {
               alert('删除成功');
-              fetchTrainingData();
+              loadTrainingData();
           } else {
               alert('删除失败: ' + result.message);
           }
@@ -239,8 +243,8 @@
       .catch(error => alert('错误: ' + error.message));
   }
 
-  // 页面加载时获取列表
-  window.onload = fetchTrainingData;
+  // 页面加载时获取数据
+  window.onload = loadTrainingData;
 </script>
 </body>
 </html>
