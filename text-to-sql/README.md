@@ -1,3 +1,5 @@
+### 简介
+这是一个通过自然语言查询数据库的小demo，可以把自然语言转换成SQL，并将查询到的数据生成为echarts图表
 #### Ollama 安装
 - [Download and install Ollama](https://ollama.com/download)
 ### 安装千问模型
@@ -126,4 +128,6 @@ curl --location --request DELETE 'localhost:8081/sandy/training/6a003036-e205-47
 }'
 响应的头信息里Content-Type=text/event-stream，响应体是黄浦区的医院有：收到您的问题，正快马加鞭进行解决<br>生成SQL中...<br>生成SQL：SELECT hospital_name, district FROM dtp_hospital WHERE district = '黄浦区';<br>查询数据中...<br>查询到数据：[{"district":"黄浦区","hospital_name":"上海交通大学医学院附属仁济医院西院"},{"district":"黄浦区","hospital_name":"上海交通大学医学院附属瑞金医院"}]<br>生成图表中...<br><iframe src="http://localhost:8081/3d5ef9f3-82de-4c39-84f7-482f28a26822.html" width="800" height="500" frameborder="0" title="黄浦区的医院有哪些"></iframe>
 ```
+### 感谢
+感谢[SuperSQL](https://github.com/guocjsh/SuperSQL)，从中学到了如何用java实现text to sql，本项目中也有多处代码，借鉴了此工程的设计与代码实现，万分感激作者的分享。
 
