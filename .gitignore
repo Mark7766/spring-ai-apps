@@ -1,13 +1,17 @@
 */HELP.md
 */target/
+*/*/target/
+*/*/HELP.md
 */.mvn
+*/*/.mvn
 */*.txt
 */*.db
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
 */generated
-
+*/.DS_Store
+*/*/.DS_Store
 ### STS ###
 ./*/.apt_generated
 ./*/.classpath
@@ -16,7 +20,7 @@
 ./*/.settings
 ./*/.springBeans
 ./*/.sts4-cache
-
+.DS_Store
 ### IntelliJ IDEA ###
 .idea
 */.idea

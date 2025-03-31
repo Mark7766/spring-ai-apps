@@ -1,0 +1,31 @@
+server:
+  port: 8091
+  tomcat:
+    async-timeout: 180000
+spring:
+  application:
+    name: "mcp-ollama-server"
+  servlet:
+    async:
+      timeout: 180000  # 设置异步请求超时为 180 秒
+  ai:
+    mcp:
+      server:
+        enabled: true
+        name: webmvc-mcp-server
+        version: 1.0.0
+        type: SYNC
+        sse-message-endpoint: /mcp/messages
+    ollama:
+      base-url: "http://localhost:11434"
+      embedding:
+        enabled: true
+        model: qwen2.5
+      chat:
+        enabled: true
+        model: qwen2.5
+logging:
+  level:
+    org.springframework.ai: DEBUG
+    io.modelcontextprotocol: DEBUG
+    org.springframework.web: DEBUG
