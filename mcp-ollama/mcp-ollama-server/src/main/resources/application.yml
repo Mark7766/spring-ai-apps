@@ -24,8 +24,3 @@ spring:
       chat:
         enabled: true
         model: qwen2.5
-logging:
-  level:
-    org.springframework.ai: DEBUG
-    io.modelcontextprotocol: DEBUG
-    org.springframework.web: DEBUG

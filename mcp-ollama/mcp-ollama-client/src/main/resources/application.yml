@@ -3,39 +3,3 @@ server:
 spring:
   application:
     name: "mcp-ollama-client"
-  ai:
-    ollama:
-      base-url: "http://localhost:11434"
-      embedding:
-        enabled: true
-        model: qwen2.5
-      chat:
-        enabled: true
-        model: qwen2.5
-    mcp:
-      client:
-        toolcallback:
-          enabled: false  # 禁用工具回调
-        enabled: true
-        name: my-mcp-client
-        version: 1.0.0
-        request-timeout: 60s
-        type: SYNC  # or ASYNC for reactive applications
-        sse:
-          connections:
-            server1:
-              url: http://localhost:8091
-#        stdio:
-#          root-change-notification: false
-#          connections:
-#            server1:
-#              command: summarize
-#              args:
-#                - --port=8091
-#                - --mode=production
-
-logging:
-  level:
-    org.springframework.ai: DEBUG
-    io.modelcontextprotocol: DEBUG
-    org.springframework.web: DEBUG

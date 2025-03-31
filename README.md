@@ -12,3 +12,7 @@
   - [text to sql](text-to-sql)：这是一个通过自然语言查询数据库的小demo，可以把自然语言转换成SQL，并将查询到的数据生成为echarts图表
 - Tool Calling DEMO
   - [tools-ollama](tools-ollama):这是一个展示Spring AI Function Calling的Demo，大模型可以根据提问，调用不同的API，解决大模型没有的最新知识问题，可以实现大模型自动处理一些任务
+- Model Context Protocol (MCP)
+  - [MCP DEMO](mcp-ollama): MCP Server DEMO实现，文章摘要总结
+    - [mcp-ollama-server](mcp-ollama/mcp-ollama-server)：MCP Server DEMO实现，文章摘要总结MCP Server，只提供MCP服务
+    - [mcp-ollama-client](mcp-ollama/mcp-ollama-client)：MCP Client DEMO实现，拥有文章摘要总结界面，调用MCP Server DEMO的MCP服务，生成总结

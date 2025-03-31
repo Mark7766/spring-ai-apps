@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Spring AI MCP DEMO</title>
+  <style>
+    body {
+        margin: 0;
+        padding: 0;
+        font-family: 'Orbitron', sans-serif;
+        color: #00e6ff;
+        background: url('https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&w=1920&q=80') no-repeat center center fixed;
+        background-size: cover;
+        height: 100vh;
+        overflow: hidden;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .container {
+        background: rgba(10, 10, 20, 0.85);
+        padding: 30px;
+        border: 3px solid #00e6ff;
+        border-radius: 10px;
+        width: 90%;
+        max-width: 900px; /* 容器宽度增加 */
+        box-shadow: 0 0 30px rgba(0, 230, 255, 0.7);
+    }
+    h1 {
+        font-size: 32px; /* 标题更大 */
+        text-align: center;
+        margin-bottom: 25px;
+        text-transform: uppercase;
+        letter-spacing: 4px;
+        text-shadow: 0 0 15px #00e6ff;
+    }
+    textarea {
+        width: 100%;
+        height: 250px; /* 输入框高度增加 */
+        background: rgba(20, 20, 40, 0.9);
+        border: 2px solid #00e6ff; /* 边框加粗 */
+        color: #00e6ff;
+        padding: 15px;
+        font-size: 16px; /* 字体加大 */
+        resize: none;
+        border-radius: 8px;
+        box-shadow: inset 0 0 8px #00e6ff;
+    }
+    button {
+        width: 100%;
+        padding: 15px; /* 按钮更大 */
+        background: #00e6ff;
+        color: #0a0a14;
+        border: none;
+        font-size: 18px; /* 字体加大 */
+        cursor: pointer;
+        margin-top: 20px;
+        border-radius: 8px;
+        transition: all 0.3s;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        box-shadow: 0 0 10px #00e6ff;
+    }
+    button:hover {
+        background: #00b8cc;
+        box-shadow: 0 0 20px #00e6ff;
+    }
+    #response {
+        margin-top: 25px;
+        padding: 15px;
+        background: rgba(20, 20, 40, 0.9);
+        border: 2px solid #00e6ff; /* 边框加粗 */
+        border-radius: 8px;
+        min-height: 200px; /* 输出框高度增加 */
+        font-size: 16px; /* 字体加大 */
+        line-height: 1.8; /* 行距更大 */
+        white-space: pre-wrap;
+        box-shadow: inset 0 0 8px #00e6ff;
+    }
+    .footer {
+        position: absolute;
+        bottom: 15px;
+        left: 50%;
+        transform: translateX(-50%);
+        font-size: 14px; /* 底部字体稍大 */
+        color: #00e6ff;
+        text-shadow: 0 0 5px #00e6ff;
+        letter-spacing: 1px;
+    }
+  </style>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+<div class="container">
+  <h1>Spring AI MCP DEMO</h1>
+  <textarea id="inputText" placeholder="输入文章内容..."></textarea>
+  <button onclick="summarizeText()">生成总结</button>
+  <div id="response">总结将显示在这里...</div>
+</div>
+<div class="footer">
+  Powered by Spring AI MCP | MCP Server & MCP Client
+</div>
+
+<script>
+  async function summarizeText() {
+      const inputText = document.getElementById('inputText').value;
+      if (!inputText) {
+          alert('请输入文章内容！');
+          return;
+      }
+
+      const responseDiv = document.getElementById('response');
+      responseDiv.innerText = '正在生成总结...';
+
+      try {
+          const response = await fetch(`http://localhost:8081/summarize?text=${encodeURIComponent(inputText)}`, {
+              method: 'GET',
+              headers: {
+                  'Content-Type': 'application/json'
+              }
+          });
+          const data = await response.text();
+          const cleanData = data.replace(/^"|"$/g, '').replace(/\\n/g, '\n');
+          responseDiv.innerText = cleanData;
+      } catch (error) {
+          responseDiv.innerText = '错误：无法连接到后端服务';
+          console.error(error);
+      }
+  }
+</script>
+</body>
+</html>
