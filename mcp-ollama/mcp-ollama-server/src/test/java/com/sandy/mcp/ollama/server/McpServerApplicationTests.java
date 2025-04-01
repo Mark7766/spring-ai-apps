@@ -1,10 +1,10 @@
-package com.sandy.mcp.ollama.client;
+package com.sandy.mcp.ollama.server;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class McpOllamaClientApplicationTests {
+class McpServerApplicationTests {
 
 	@Test
 	void contextLoads() {

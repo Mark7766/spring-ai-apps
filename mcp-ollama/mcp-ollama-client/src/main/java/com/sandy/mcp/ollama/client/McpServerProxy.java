@@ -4,30 +4,41 @@ import io.modelcontextprotocol.client.McpSyncClient;
 import io.modelcontextprotocol.client.transport.HttpClientSseClientTransport;
 import io.modelcontextprotocol.spec.McpSchema;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.ai.tool.annotation.Tool;
 import org.springframework.ai.util.json.JsonParser;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.stereotype.Component;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
 @Slf4j
-@RestController
-public class SummarizationController {
-    @GetMapping("/summarize")
-    public String summarize(@RequestParam("text") String text) throws Exception {
-        log.info("text:{}", text);
-        // 构造工具调用请求
-        Map<String, Object> params = new HashMap<>();
-        params.put("text", text);
-        McpSchema.CallToolRequest request = new McpSchema.CallToolRequest("summarize", params);
+@Component
+public class McpServerProxy {
+
+    @Tool(description = "查询用户所在时区的当前时间")
+    String getCurrentDateTime() {
+        log.info("getCurrentDateTime:{}",new Date());
+        McpSchema.CallToolRequest request = new McpSchema.CallToolRequest("getCurrentDateTime",new HashMap<>());
         McpSyncClient client = mcpSyncClient();
         McpSchema.CallToolResult result = client.callTool(request);
         log.info(JsonParser.toJson(result));
         client.close();
         McpSchema.TextContent content = (McpSchema.TextContent) result.content().get(0);
         return content.text();
+    }
+
+    @Tool(description = "将用户闹钟设置为给定的时间，时间格式为 ISO-8601")
+    public void setAlarm(String time) {
+        log.info("setAlarm:{}",time);
+        // 构造工具调用请求
+        Map<String, Object> params = new HashMap<>();
+        params.put("time", time);
+        McpSchema.CallToolRequest request = new McpSchema.CallToolRequest("setAlarm",params);
+        McpSyncClient client = mcpSyncClient();
+        McpSchema.CallToolResult result = client.callTool(request);
+        log.info("setAlarm:{}",JsonParser.toJson(result));
+        client.close();
     }
 
     private McpSyncClient mcpSyncClient() {

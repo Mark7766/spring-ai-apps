@@ -7,10 +7,10 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 @Slf4j
 @Configuration
-public class ToolConfig {
+public class ToolBeanConfig {
 
     @Bean
-    public ToolCallbackProvider toolCallbackProvider(SummarizationTool summarizationTool) throws Exception {
-        return MethodToolCallbackProvider.builder().toolObjects(summarizationTool).build();
+    public ToolCallbackProvider toolCallbackProvider(McpServerTool mcpServerTool) throws Exception {
+        return MethodToolCallbackProvider.builder().toolObjects(mcpServerTool).build();
     }
 }

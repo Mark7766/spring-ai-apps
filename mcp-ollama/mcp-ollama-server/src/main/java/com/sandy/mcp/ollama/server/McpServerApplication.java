@@ -6,13 +6,13 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class McpOllamaServerApplication {
+public class McpServerApplication {
 
 
 	@Autowired
 	private WebMvcSseServerTransport sseTransport;
 
 	public static void main(String[] args) {
-		SpringApplication.run(McpOllamaServerApplication.class, args);
+		SpringApplication.run(McpServerApplication.class, args);
 	}
 }

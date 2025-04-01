@@ -94,9 +94,9 @@
 <body>
 <div class="container">
   <h1>Spring AI MCP DEMO</h1>
-  <textarea id="inputText" placeholder="输入文章内容..."></textarea>
-  <button onclick="summarizeText()">生成总结</button>
-  <div id="response">总结将显示在这里...</div>
+  <textarea id="inputText" placeholder="输入问题，如：查询当前时间或者设置闹钟时间为10点，也可以同时做两件事'查询当前时间，并设置闹钟为10点'，MCP Client将根据问题，自动选择调用MCP Server的getCurrentDateTime或者setAlarm工具"></textarea>
+  <button onclick="summarizeText()">提问</button>
+  <div id="response">问题答案将显示在这里...</div>
 </div>
 <div class="footer">
   Powered by Spring AI MCP | MCP Server & MCP Client
@@ -111,10 +111,10 @@
       }
 
       const responseDiv = document.getElementById('response');
-      responseDiv.innerText = '正在生成总结...';
+      responseDiv.innerText = '正在解决问题...';
 
       try {
-          const response = await fetch(`http://localhost:8081/summarize?text=${encodeURIComponent(inputText)}`, {
+          const response = await fetch(`http://localhost:8081/ask?text=${encodeURIComponent(inputText)}`, {
               method: 'GET',
               headers: {
                   'Content-Type': 'application/json'

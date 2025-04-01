@@ -16,11 +16,3 @@ spring:
         version: 1.0.0
         type: SYNC
         sse-message-endpoint: /mcp/messages
-    ollama:
-      base-url: "http://localhost:11434"
-      embedding:
-        enabled: true
-        model: qwen2.5
-      chat:
-        enabled: true
-        model: qwen2.5
