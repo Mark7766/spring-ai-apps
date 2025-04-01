@@ -1,5 +1,6 @@
 package com.sandy.text.tosql.controller;
 
+import com.sandy.text.tosql.config.TextToSqlCfg;
 import com.sandy.text.tosql.model.SqlAssistantPrompt;
 import com.sandy.text.tosql.model.SqlpromptBuilder;
 import com.sandy.text.tosql.model.Training;
@@ -26,6 +27,7 @@ import org.springframework.ai.vectorstore.SearchRequest;
 import org.springframework.ai.vectorstore.VectorStore;
 import org.springframework.ai.vectorstore.filter.FilterExpressionBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.http.MediaType;
@@ -50,6 +52,8 @@ public class ChatController {
     private static final int TOP_K = 10;
     @Autowired
     private ChatModel chatModel; // 注入聊天模型
+    @Autowired
+    private TextToSqlCfg textToSqlCfg;
 
     @Autowired
     private final VectorStore vectorStore;
@@ -194,7 +198,8 @@ public class ChatController {
             String content =ChatClient.builder(chatModel) .build().prompt(prompt).call().content();
             content=null!=content?content.replaceAll("```html","").replaceAll("```",""):null;
             String directory = "./generated/";
-//            String directory = "/Users/mark/work/gitspace/opensource/sandy-apps/duosql/super-sql-ui/";
+            checkDirectory(directory);
+
             String fileName = UUID.randomUUID().toString() + ".html";
             File file = new File(directory+fileName);
             // 写入文件
@@ -218,12 +223,27 @@ public class ChatController {
                 }
             }
             log.info("generate html fileName:{},file:{}",fileName,content);
-            String address = "http://localhost:8081/"+fileName;
-            return address;
+            return "http://"+textToSqlCfg.getHost()+":"+textToSqlCfg.getPort()+"/"+fileName;
         }catch (Exception e){
             log.error("Failed to generate EchartsJson: {}", e.getMessage());
         }
         return null;
+    }
+    private void checkDirectory(String directory) {
+        // Create File object
+        File dir = new File(directory);
+        // Check if directory exists
+        if (!dir.exists()) {
+            // If it doesn't exist, try to create the directory
+            boolean created = dir.mkdirs();
+            if (created) {
+                log.info("Directory created successfully: {}", directory);
+            } else {
+                log.info("Failed to create directory: {}", directory);
+            }
+        } else {
+            log.info("Directory already exists: {}", directory);
+        }
     }
 
 

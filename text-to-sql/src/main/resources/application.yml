@@ -1,5 +1,6 @@
 server:
-  port: 8081
+  port: ${TEXT_TO_SQL_PORT:8081}
+  host: ${TEXT_TO_SQL_HOST:localhost}
 spring:
   application:
     name: "text-to-sql"

@@ -65,6 +65,9 @@ INSERT INTO dtp_hospital (
 ```
 ### 运行程序
 - mvn spring-boot:run -DskipTest
+### docker
+- docker build：[docker_image_build.sh](docker_image_build.sh)
+- docker run：[docker_container_start.sh](docker_container_start.sh)
 ### 添加数据库DDL训练数据
 ```
 curl --location 'localhost:8081/sandy/training' \
