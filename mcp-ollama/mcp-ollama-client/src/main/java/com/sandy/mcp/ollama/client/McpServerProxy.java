@@ -19,24 +19,31 @@ public class McpServerProxy {
     @Tool(description = "查询用户所在时区的当前时间")
     String getCurrentDateTime() {
         log.info("getCurrentDateTime:{}",new Date());
-        McpSchema.CallToolRequest request = new McpSchema.CallToolRequest("getCurrentDateTime",new HashMap<>());
+        McpSchema.CallToolRequest request
+                = new McpSchema.CallToolRequest(
+                        "getCurrentDateTime",new HashMap<>());
         McpSyncClient client = mcpSyncClient();
-        McpSchema.CallToolResult result = client.callTool(request);
+        McpSchema.CallToolResult result = client
+                .callTool(request);
         log.info(JsonParser.toJson(result));
         client.close();
         McpSchema.TextContent content = (McpSchema.TextContent) result.content().get(0);
         return content.text();
     }
 
-    @Tool(description = "将用户闹钟设置为给定的时间，时间格式为 ISO-8601")
+    @Tool(description = "将用户闹钟设置为给定的时间，" +
+            "时间格式为 ISO-8601")
     public void setAlarm(String time) {
         log.info("setAlarm:{}",time);
         // 构造工具调用请求
         Map<String, Object> params = new HashMap<>();
         params.put("time", time);
-        McpSchema.CallToolRequest request = new McpSchema.CallToolRequest("setAlarm",params);
+        McpSchema.CallToolRequest request
+                = new McpSchema.CallToolRequest(
+                        "setAlarm",params);
         McpSyncClient client = mcpSyncClient();
-        McpSchema.CallToolResult result = client.callTool(request);
+        McpSchema.CallToolResult result = client
+                .callTool(request);
         log.info("setAlarm:{}",JsonParser.toJson(result));
         client.close();
     }
