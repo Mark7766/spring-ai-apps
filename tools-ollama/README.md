@@ -6,7 +6,7 @@
 ollama pull qwen2.5
 # 启动
 IDE spring-boot:run -DskipTest
-# 访问 http://localhost:8081/index.html
+# 访问 http://localhost:8081/chat.html
 - 填写今天星期几
 会调用
 ```
