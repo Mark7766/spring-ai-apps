@@ -31,6 +31,7 @@ public class SqlAssistantPrompt {
             4. Please use the most relevant table(s).
             5. If the question has been asked and answered before, please repeat the answer exactly as it was given before.
             6. Ensure that the output SQL is SQL-compliant and executable, and free of syntax errors.
+            7. 查询sql的where条件里，不能进行翻译，提问里是英文就是英文，是中文就是中文
             """;
 
     private static final int MAX_LENGTH = 14000;

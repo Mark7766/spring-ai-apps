@@ -34,12 +34,22 @@ spring:
         order_inserts: true
         order_updates: true
   ai:
+    dashscope:
+      api-key: ${BL_API_KEY}
+      read-timeout: 180
+      chat:
+        enabled: ${TEXT_TO_SQL_DASHSCOPE_ENABLED:true}
+        options:
+          model: ${TEXT_TO_SQL_DASHSCOPE_MODEL:qwen-plus} #qwen-plus
+      embedding:
+        enabled: ${TEXT_TO_SQL_DASHSCOPE_ENABLED:false}
+        options:
+          model: ${TEXT_TO_SQL_DASHSCOPE_MODEL:text-embedding-v1}
     #  当使用 Ollama时，请配置以下参数
     ollama:
       base-url: ${TEXT_TO_SQL_OLLAMA_URL:http://localhost:11434}
       chat:
-        model: ${TEXT_TO_SQL_OLLAMA_MODEL:qwen2.5}
-        enabled: ${TEXT_TO_SQL_OLLAMA_ENABLED:true}
+        enabled: ${TEXT_TO_SQL_OLLAMA_ENABLED:false}
         options:
           model: ${TEXT_TO_SQL_OLLAMA_MODEL:qwen2.5}
           temperature: ${TEXT_TO_SQL_OLLAMA_TEMPERATURE:0.7}
