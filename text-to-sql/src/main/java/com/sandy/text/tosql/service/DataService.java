@@ -85,6 +85,8 @@ public class DataService {
                     {question}
                     ### 给定的数据为
                     {data}
+                    ### 输出
+                    要求罗列出所有的异常数据，不能省略
                     """);
         Prompt prompt = promptTemplate.create(Map.of("question", question,"data", JsonParser.toJson(data)));
         log.info("doDetect prompt:{}", JsonParser.toJson(prompt));
@@ -95,13 +97,15 @@ public class DataService {
                     ### 角色
                     你是一个数据预测算法专家，擅长各种数据预测算法的设计、开发与选型
                     ### 目标
-                    预测未来的数据
+                    预测未来的数据趋势
                     ### 方法
                     基于给定问题和数据，进行数据预测，并说明预测算法和依据
                     ### 给定的问题为
                     {question}
                     ### 给定的数据为
                     {data}
+                    ### 输出
+                    要求列出所有预测数据，不要返回python的脚本，预测数据的时间要为字符串形式，如：2025-04-08 16:14:01
                     """);
         Prompt prompt = promptTemplate.create(Map.of("question", question,"data", JsonParser.toJson(data)));
         log.info("doPredict prompt:{}", JsonParser.toJson(prompt));
@@ -125,7 +129,7 @@ public class DataService {
                     ### 给定的问题为
                     {question}
                     ### 输出格式
-                    如果是查询数据，query，如果是异常数据检测，detect，如果是预测数据，返回predict，如果涉及多个，请用|分隔
+                    如果是查询数据或生成图表或者生成报表，就返回query，如果是异常数据检测，就返回detect，如果是预测数据，就返回predict，如果涉及多个，请用|分隔
                     query|detect，query|predict等，如果都不是，请直接返回UnKnown
                     """);
         Prompt prompt = promptTemplate.create(Map.of("question", question));

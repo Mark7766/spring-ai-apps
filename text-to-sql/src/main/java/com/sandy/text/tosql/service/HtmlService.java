@@ -18,7 +18,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import java.util.concurrent.atomic.AtomicReference;
 
 @Slf4j
 @Service
@@ -45,7 +44,10 @@ public class HtmlService {
             }
             PromptTemplate promptTemplate = new PromptTemplate("""
                     ### 目标
-                    基于给定的title、data和html模版，生成html，将html模版里的$title替换为给定的title，基于data生成echarts脚本，并将html模版里的$generateScript替换为生成的echarts脚本,要求只返回html部分，并且去掉```html和```，将html部分生成html文件后，可以被浏览器正常访问
+                    基于给定的title、data和html模版，生成html
+                    ### 方法
+                    将html模版里的$title替换为给定的title，基于data生成echarts脚本，如果有Y轴，Y轴的最小值是Y轴值的最小值，如果有X轴是时间，要按照时间顺序排列，并将html模版里的$generateScript替换为生成的echarts脚本,
+                    要求只返回html部分，并且去掉```html和```，将html部分生成html文件后，可以被浏览器正常访问
                     ### 给定的title为
                     {title}
                     ### 给定的data为
