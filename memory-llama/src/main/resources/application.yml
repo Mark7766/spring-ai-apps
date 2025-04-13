@@ -1,0 +1,14 @@
+server:
+  port: 8081
+spring:
+  application:
+    name: "memory-llama"
+  ai:
+    ollama:
+      base-url: "http://localhost:11434"
+      embedding:
+        enabled: true
+        model: qwen2.5
+      chat:
+        enabled: true
+        model: qwen2.5

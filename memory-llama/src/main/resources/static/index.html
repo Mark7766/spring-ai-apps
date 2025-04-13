@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sci-Fi AI Chat</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+<div class="container">
+    <div class="chat-box">
+        <div class="chat-header">
+            <h1>AI Quantum Interface</h1>
+            <button id="new-conversation-btn">New Conversation</button>
+        </div>
+        <div class="conversation-selector">
+            <select id="conversation-select">
+                <option value="">Select a conversation</option>
+            </select>
+        </div>
+        <div class="chat-body" id="chat-body"></div>
+        <div class="chat-footer">
+            <textarea id="user-input" placeholder="Type your message..."></textarea>
+            <button id="send-btn">Send</button>
+        </div>
+    </div>
+    <div class="history-panel" id="history-panel">
+        <h2>Chat History</h2>
+        <div id="history-content"></div>
+        <button id="close-history">Close</button>
+    </div>
+</div>
+<script src="/js/script.js"></script>
+</body>
+</html>
