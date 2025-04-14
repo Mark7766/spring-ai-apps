@@ -1,0 +1,332 @@
+/* 重置默认样式 */
+html, body {
+    margin: 0;
+    padding: 0;
+    width: 100vw;
+    height: 100vh;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    background: #f5f5f5; /* 浅灰背景，Grok 风格 */
+    color: #333; /* 深灰文字 */
+    overflow-x: hidden;
+}
+
+/* 通用容器 */
+.grok-container {
+    width: 100%;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    padding: 2rem 5vw;
+    box-sizing: border-box;
+    align-items: center;
+}
+
+/* 标题 */
+.grok-header {
+    text-align: center;
+    margin-bottom: 2.5rem;
+}
+
+.grok-header h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #007bff; /* 蓝色标题，Grok 风格 */
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* 卡片 */
+.grok-card {
+    background: #fff;
+    border-radius: 1rem;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+    padding: 2rem;
+    margin-bottom: 2rem;
+    width: 100%;
+    max-width: 1200px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.grok-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+
+.grok-chat-card {
+    flex: 1;
+}
+
+/* 对话区域 */
+.grok-main {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+.grok-chat-body {
+    max-height: 70vh;
+    overflow-y: auto;
+    padding-right: 1rem;
+    scrollbar-width: thin;
+    scrollbar-color: #d1d1d1 transparent;
+}
+
+.grok-chat-body::-webkit-scrollbar {
+    width: 8px;
+}
+
+.grok-chat-body::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.grok-chat-body::-webkit-scrollbar-thumb {
+    background: #d1d1d1;
+    border-radius: 4px;
+}
+
+/* 消息样式 */
+.message {
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: flex-start;
+    animation: fadeIn 0.3s ease-in;
+}
+
+.message-ai {
+    justify-content: flex-start;
+}
+
+.message-user {
+    justify-content: flex-end;
+}
+
+.message-content {
+    max-width: 70%;
+    padding: 1rem;
+    border-radius: 0.75rem;
+    position: relative;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.message-ai .message-content {
+    background: #f5f5f5; /* 灰白，AI 回复 */
+    color: #333;
+}
+
+.message-user .message-content {
+    background: #007bff; /* 蓝色，用户问题 */
+    color: #fff;
+    text-align: right;
+}
+
+.message-content p {
+    margin: 0;
+    font-size: 1.1rem;
+    line-height: 1.5;
+}
+
+.message-time {
+    display: block;
+    font-size: 0.85rem;
+    color: #666; /* 灰色时间 */
+    margin-top: 0.5rem;
+}
+
+/* 输入区域 */
+.grok-footer {
+    display: flex;
+    justify-content: center;
+    margin-top: 1rem;
+    width: 100%;
+}
+
+.grok-input-card {
+    width: 100%;
+    max-width: 1200px;
+    background: #fff;
+    border-radius: 1rem;
+    padding: 1.5rem;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+}
+
+/* 文档页面 */
+.grok-section {
+    margin-bottom: 3rem;
+    width: 100%;
+    max-width: 1200px;
+}
+
+.grok-card h2 {
+    font-size: 1.8rem;
+    color: #333;
+    margin-bottom: 1.5rem;
+}
+
+.table {
+    width: 100%;
+    font-size: 1.1rem;
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+.table th {
+    font-weight: 600;
+    color: #333;
+    padding: 1rem;
+    background: #f5f5f5;
+}
+
+.table td {
+    vertical-align: middle;
+    padding: 1rem;
+}
+
+.table-hover tbody tr:hover {
+    background: #e6f0fa; /* 悬停高亮 */
+}
+
+.table tbody tr {
+    transition: background 0.2s ease;
+}
+
+.table .text-center {
+    color: #666;
+}
+
+/* 表单和按钮 */
+.form-control {
+    border-radius: 0.5rem;
+    border: 1px solid #d1d1d1;
+    font-size: 1.1rem;
+    padding: 0.75rem;
+    transition: border-color 0.3s ease;
+}
+
+.form-control:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 8px rgba(0, 123, 255, 0.3);
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #007bff, #0056b3);
+    border: none;
+    border-radius: 0.5rem;
+    padding: 0.75rem 2rem;
+    font-size: 1.1rem;
+    transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.btn-primary:hover {
+    background: linear-gradient(135deg, #0056b3, #003d80);
+    transform: scale(1.05);
+}
+
+.btn-primary:disabled {
+    background: #b0c4de; /* 禁用时灰蓝 */
+    cursor: not-allowed;
+    transform: none;
+}
+
+.btn-outline-secondary {
+    border-color: #d1d1d1;
+    color: #333;
+    border-radius: 0.5rem;
+    padding: 0.75rem 2rem;
+    font-size: 1.1rem;
+    transition: border-color 0.3s ease, color 0.3s ease;
+}
+
+.btn-outline-secondary:hover {
+    border-color: #007bff;
+    color: #007bff;
+}
+
+.btn-danger {
+    background: linear-gradient(135deg, #dc3545, #c82333);
+    border: none;
+    border-radius: 0.5rem;
+    padding: 0.5rem 1.5rem;
+    font-size: 1rem;
+}
+
+.btn-danger:hover {
+    background: linear-gradient(135deg, #c82333, #b21f2d);
+    transform: scale(1.05);
+}
+
+/* 加载动画 */
+.upload-loading {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 1rem;
+    color: #007bff; /* 蓝色，匹配 Grok */
+    font-size: 1rem;
+}
+
+.upload-loading.d-none {
+    display: none;
+}
+
+.upload-loading .spinner-border {
+    width: 1.5rem;
+    height: 1.5rem;
+    border-width: 0.2em;
+}
+
+/* 导航 */
+.grok-nav {
+    text-align: center;
+    margin-top: 2rem;
+}
+
+/* 小字体提示 */
+.form-text {
+    color: #666; /* 灰色提示 */
+}
+
+/* 上传消息 */
+#uploadMessage.text-success {
+    color: #28a745;
+    font-size: 1rem;
+}
+
+#uploadMessage.text-danger {
+    color: #dc3545;
+    font-size: 1rem;
+}
+
+/* 动画 */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* 响应式 */
+@media (max-width: 768px) {
+    .grok-container {
+        padding: 1rem 3vw;
+    }
+
+    .grok-header h1 {
+        font-size: 2rem;
+    }
+
+    .grok-card, .grok-input-card {
+        padding: 1.5rem;
+    }
+
+    .message-content {
+        max-width: 85%;
+    }
+
+    .table th, .table td {
+        padding: 0.75rem;
+        font-size: 1rem;
+    }
+
+    .btn-primary, .btn-outline-secondary, .btn-danger {
+        padding: 0.5rem 1.5rem;
+        font-size: 1rem;
+    }
+}

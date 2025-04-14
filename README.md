@@ -17,3 +17,5 @@
   - [MCP DEMO](mcp-ollama): MCP Server DEMO实现，文章摘要总结
     - [mcp-ollama-server](mcp-ollama/mcp-ollama-server)：MCP Server DEMO实现，文章摘要总结MCP Server，只提供MCP服务
     - [mcp-ollama-client](mcp-ollama/mcp-ollama-client)：MCP Client DEMO实现，拥有文章摘要总结界面，调用MCP Server DEMO的MCP服务，生成总结
+- Retrieval Augmented Generation (RAG)
+  - [etl](etl)本Demo主要应用了Spring的ETL Pipeline组件和Retrieval Augmented Generation (RAG)组件， 实现了多种文档，如： PDF、TXT、DOC/DOCX、PPT/PPTX等的文件上传与管理，并基于这些文档里的内容，对用户提出的问题，进行回答
