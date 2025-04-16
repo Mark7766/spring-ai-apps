@@ -1,0 +1,12 @@
+server:
+  port: 8081
+spring:
+  application:
+    name: "chat-azure"
+  thymeleaf:
+    cache: false
+  ai:
+    azure:
+      openai:
+        api-key:  ${AZURE_OPENAI_API_KEY}
+        endpoint:  ${AZURE_OPENAI_ENDPOINT}
