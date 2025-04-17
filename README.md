@@ -3,6 +3,7 @@
 # Spring AI 小应用列表:
 - Chat Models DEMO 
   - [chat-deepseek](chat-deepseek):基于DeepSeek的聊天应用
+  - [chat-azure](chat-azure):基于azure的openai的大模型的聊天应用
   - [newston](newston):是一个智能编辑代理，每六个小时会，检索一次hark news的最新story，并挑选出AI和软件开发相关内容，并用中文总结，最后通过将汇总后的内容，以邮件形式发送给接收人。
   - [memory-llama](memory-llama):通过这个小demo，想让大家学习到Spring AI如何实现记忆功能和流式输出，发现记忆功能非常重要，可以和程序进行多轮沟通，寻求更好的答案
 - Embedding Models DEMO 
