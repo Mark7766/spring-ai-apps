@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Generated Design</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron&display=swap" rel="stylesheet">
+    <style>
+        html, body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            width: 100%;
+            overflow: hidden;
+            background: linear-gradient(135deg, #0d1b2a 0%, #1b263b 100%);
+            font-family: 'Orbitron', sans-serif;
+            color: #ffffff;
+        }
+
+        .container {
+            width: 100vw;
+            height: 100vh;
+            padding: 20px;
+            box-sizing: border-box;
+            display: flex;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" opacity="0.1"><circle cx="50" cy="50" r="40" stroke="#778da9" stroke-width="2" fill="none"/></svg>') repeat;
+        }
+
+        .left-panel {
+            width: 40%;
+            padding: 20px;
+            background: rgba(10, 25, 47, 0.8);
+            border-right: 1px solid #415a77;
+            box-shadow: 0 0 20px rgba(65, 90, 119, 0.3);
+            overflow-y: auto;
+        }
+
+        .right-panel {
+            width: 60%;
+            padding: 20px;
+            overflow-y: auto;
+            max-height: calc(100vh - 40px);
+            scrollbar-width: thin;
+            scrollbar-color: #778da9 rgba(10, 25, 47, 0.8);
+            position: relative;
+        }
+
+        .right-panel::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .right-panel::-webkit-scrollbar-track {
+            background: rgba(10, 25, 47, 0.8);
+            border-radius: 4px;
+        }
+
+        .right-panel::-webkit-scrollbar-thumb {
+            background: #778da9;
+            border-radius: 4px;
+            box-shadow: 0 0 10px rgba(65, 90, 119, 0.5);
+        }
+
+        .right-panel::-webkit-scrollbar-thumb:hover {
+            background: #415a77;
+        }
+
+        h1 {
+            text-align: center;
+            text-shadow: 0 0 10px rgba(65, 90, 119, 0.5);
+        }
+
+        .form-group {
+            margin: 20px 0;
+        }
+
+        textarea {
+            width: 100%;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid #415a77;
+            border-radius: 5px;
+            color: #ffffff;
+            font-size: 14px;
+            box-shadow: 0 0 10px rgba(65, 90, 119, 0.2);
+            height: 150px;
+            resize: vertical;
+        }
+
+        button {
+            padding: 10px 20px;
+            background: linear-gradient(45deg, #778da9, #415a77);
+            color: #ffffff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            box-shadow: 0 0 15px rgba(65, 90, 119, 0.5);
+            transition: all 0.3s;
+            margin-right: 10px;
+        }
+
+        button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(65, 90, 119, 0.8);
+        }
+
+        .iframe-container {
+            width: 100%;
+            height: calc(100vh - 150px);
+            border: 1px solid #415a77;
+            border-radius: 5px;
+            box-shadow: 0 0 15px rgba(65, 90, 119, 0.3);
+            overflow: auto;
+            position: relative;
+        }
+
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            transform-origin: top left;
+            transition: transform 0.3s;
+        }
+
+        .controls {
+            margin-bottom: 10px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .full-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 1000;
+            background: rgba(10, 25, 47, 0.95);
+        }
+
+        .full-screen .iframe-container {
+            width: 100%;
+            height: calc(100vh - 60px);
+            margin: 10px;
+        }
+
+        .loading-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(10, 25, 47, 0.9);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 500;
+        }
+
+        .loader {
+            border: 4px solid #778da9;
+            border-top: 4px solid #415a77;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            box-shadow: 0 0 20px rgba(65, 90, 119, 0.8);
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="left-panel">
+        <h1>Generated Design</h1>
+        <div class="form-group">
+            <textarea id="adjustments" placeholder="Enter adjustments (e.g., Change the background to red, add a header)"></textarea>
+            <button onclick="submitAdjustments()">Submit Adjustments</button>
+        </div>
+        <div class="form-group">
+            <button onclick="copyShareLink()" th:attr="data-uuid=${designUuid}">Copy Share Link</button>
+            <button onclick="downloadDesign()">Download Design</button>
+            <button onclick="openInNewWindow()">Open in New Window</button>
+            <button onclick="window.location.href='/design'">Back to Design</button>
+        </div>
+    </div>
+    <div class="right-panel">
+        <h1>Design Preview</h1>
+        <div class="controls">
+            <button onclick="zoomIn()">Zoom In</button>
+            <button onclick="zoomOut()">Zoom Out</button>
+            <button onclick="toggleFullScreen()">Toggle Full Screen</button>
+        </div>
+        <div class="iframe-container" id="iframeContainer">
+            <div class="loading-overlay" id="loadingOverlay">
+                <div class="loader"></div>
+            </div>
+            <iframe id="designFrame" th:attr="srcdoc=${generatedDesign}"></iframe>
+        </div>
+    </div>
+</div>
+
+<script>
+    let scale = 1;
+    let isFullScreen = false;
+
+    function copyShareLink() {
+        const uuid = document.querySelector('button[data-uuid]').getAttribute('data-uuid');
+        const shareLink = `${window.location.origin}/design/view/${uuid}`;
+        navigator.clipboard.writeText(shareLink).then(() => {
+            alert('Share link copied to clipboard: ' + shareLink);
+        }).catch(err => {
+            alert('Failed to copy link: ' + err);
+        });
+    }
+
+    function downloadDesign() {
+        const designContent = document.getElementById('designFrame').getAttribute('srcdoc');
+        const blob = new Blob([designContent], { type: 'text/html' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'generated_design.html';
+        a.click();
+        URL.revokeObjectURL(url);
+    }
+
+    function openInNewWindow() {
+        const designContent = document.getElementById('designFrame').getAttribute('srcdoc');
+        const newWindow = window.open();
+        newWindow.document.write(designContent);
+        newWindow.document.close();
+    }
+
+    function zoomIn() {
+        scale += 0.1;
+        document.getElementById('designFrame').style.transform = `scale(${scale})`;
+    }
+
+    function zoomOut() {
+        scale = Math.max(0.5, scale - 0.1);
+        document.getElementById('designFrame').style.transform = `scale(${scale})`;
+    }
+
+    function toggleFullScreen() {
+        const container = document.getElementById('iframeContainer');
+        isFullScreen = !isFullScreen;
+        if (isFullScreen) {
+            container.classList.add('full-screen');
+        } else {
+            container.classList.remove('full-screen');
+        }
+    }
+
+    function submitAdjustments() {
+        const adjustments = document.getElementById('adjustments').value;
+        const currentDesign = document.getElementById('designFrame').getAttribute('srcdoc');
+        const designUuid = document.querySelector('button[data-uuid]').getAttribute('data-uuid');
+
+        if (!adjustments) {
+            alert('Please enter adjustment requirements');
+            return;
+        }
+
+        document.getElementById('loadingOverlay').style.display = 'flex';
+
+        fetch('/design/adjust', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ currentDesign, adjustments, designUuid })
+        })
+        .then(response => response.json())
+        .then(result => {
+            document.getElementById('loadingOverlay').style.display = 'none';
+
+            if (result.generatedDesign) {
+                document.getElementById('designFrame').setAttribute('srcdoc', result.generatedDesign);
+                document.querySelector('button[data-uuid]').setAttribute('data-uuid', result.designUuid);
+                document.getElementById('adjustments').value = '';
+                alert('Adjustments sent successfully and design updated');
+            } else {
+                alert('Failed to adjust design: ' + result.error);
+            }
+        })
+        .catch(error => {
+            document.getElementById('loadingOverlay').style.display = 'none';
+            alert('Error: ' + error.message);
+        });
+    }
+</script>
+</body>
+</html>

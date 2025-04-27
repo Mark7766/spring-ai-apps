@@ -1,0 +1,45 @@
+server:
+  port: 8081
+spring:
+  application:
+    name: "prototype-design"
+  thymeleaf:
+    cache: false
+  datasource:
+    url: jdbc:h2:file:./h2-data/testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: ""
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: update # Enables automatic table creation
+  h2:
+    console:
+      enabled: true
+      path: /h2-console # Optional: Customize the console path if needed
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+  ai:
+    azure:
+      openai:
+        api-key: ${AZURE_OPENAI_API_KEY}
+        endpoint: ${AZURE_OPENAI_ENDPOINT}
+        chat:
+          model: gpt4o
+          enabled: true
+    ollama:
+      base-url: "http://localhost:11434"
+      chat:
+        enabled: false
+        model: qwen2.5
+template:
+  storage:
+    path: ./templates/storage/
+logging:
+  level:
+    com.sandy.prototype.design: INFO
+    org.hibernate.SQL: INFO # Optional, for SQL debugging
+    org.hibernate.type: INFO # Optional, for SQL parameter binding

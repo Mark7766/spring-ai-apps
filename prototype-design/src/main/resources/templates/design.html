@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Design Generator</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron&display=swap" rel="stylesheet">
+    <style>
+        html, body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            width: 100%;
+            overflow: hidden;
+            background: linear-gradient(135deg, #0d1b2a 0%, #1b263b 100%);
+            font-family: 'Orbitron', sans-serif;
+            color: #ffffff;
+        }
+
+        .container {
+            width: 100vw;
+            height: 100vh;
+            padding: 40px;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" opacity="0.1"><circle cx="50" cy="50" r="40" stroke="#778da9" stroke-width="2" fill="none"/></svg>') repeat;
+        }
+
+        h1 {
+            text-align: center;
+            text-shadow: 0 0 10px rgba(65, 90, 119, 0.5);
+            margin-bottom: 20px;
+        }
+
+        .template-selector {
+            flex: 1;
+            margin-bottom: 20px;
+            overflow-x: auto;
+            white-space: nowrap;
+            scrollbar-width: thin;
+            scrollbar-color: #778da9 rgba(10, 25, 47, 0.8);
+        }
+
+        .template-selector::-webkit-scrollbar {
+            height: 8px;
+        }
+
+        .template-selector::-webkit-scrollbar-track {
+            background: rgba(10, 25, 47, 0.8);
+            border-radius: 4px;
+        }
+
+        .template-selector::-webkit-scrollbar-thumb {
+            background: #778da9;
+            border-radius: 4px;
+            box-shadow: 0 0 10px rgba(65, 90, 119, 0.5);
+        }
+
+        .template-selector::-webkit-scrollbar-thumb:hover {
+            background: #415a77;
+        }
+
+        .template-item {
+            display: inline-block;
+            width: 300px;
+            margin-right: 20px;
+            background: rgba(10, 25, 47, 0.9);
+            padding: 15px;
+            border: 1px solid #415a77;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(65, 90, 119, 0.3);
+            text-align: center;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .template-item:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(65, 90, 119, 0.8);
+        }
+
+        .template-item.selected {
+            border: 2px solid #778da9;
+            box-shadow: 0 0 25px rgba(65, 90, 119, 1);
+        }
+
+        .template-thumbnail {
+            width: 100%;
+            height: 200px;
+            border: 1px solid #415a77;
+            border-radius: 5px;
+            background: #fff;
+        }
+
+        .template-name {
+            margin-top: 10px;
+            font-size: 16px;
+        }
+
+        .form-container {
+            background: rgba(10, 25, 47, 0.8);
+            padding: 20px;
+            border: 1px solid #415a77;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(65, 90, 119, 0.3);
+        }
+
+        .form-group {
+            margin: 20px 0;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 16px;
+        }
+
+        textarea {
+            width: 100%;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid #415a77;
+            border-radius: 5px;
+            color: #ffffff;
+            font-size: 14px;
+            box-shadow: 0 0 10px rgba(65, 90, 119, 0.2);
+            height: 150px;
+            resize: vertical;
+        }
+
+        button {
+            padding: 10px 20px;
+            background: linear-gradient(45deg, #778da9, #415a77);
+            color: #ffffff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            box-shadow: 0 0 15px rgba(65, 90, 119, 0.5);
+            transition: all 0.3s;
+            display: block;
+            margin: 20px auto;
+        }
+
+        button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(65, 90, 119, 0.8);
+        }
+
+        .error {
+            color: #ff4444;
+            text-align: center;
+            margin-top: 10px;
+            text-shadow: 0 0 5px rgba(255, 68, 68, 0.5);
+        }
+
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(10, 25, 47, 0.9);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .loader {
+            border: 4px solid #778da9;
+            border-top: 4px solid #415a77;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            box-shadow: 0 0 20px rgba(65, 90, 119, 0.8);
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(10, 25, 47, 0.95);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            width: 80%;
+            height: 80%;
+            background: rgba(10, 25, 47, 0.9);
+            border: 1px solid #415a77;
+            border-radius: 5px;
+            box-shadow: 0 0 20px rgba(65, 90, 119, 0.3);
+            overflow: auto;
+            position: relative;
+        }
+
+        .modal-content iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: linear-gradient(45deg, #ff4444, #ff8787);
+            padding: 5px 10px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Design Generator</h1>
+    <div class="template-selector">
+        <div th:each="templateWithContent : ${templates}"
+             class="template-item"
+             th:attr="data-id=${templateWithContent.template.id},data-content=${templateWithContent.template.type == 'html' ? templateWithContent.content : ''}"
+             onclick="selectTemplate(this)">
+            <iframe class="template-thumbnail"
+                    th:attr="srcdoc=${templateWithContent.template.type == 'html' ? templateWithContent.content : ''}"
+                    th:if="${templateWithContent.template.type == 'html'}"></iframe>
+            <p th:if="${templateWithContent.template.type == 'pdf'}">PDF (No preview)</p>
+            <div class="template-name" th:text="${templateWithContent.template.name}">Template Name</div>
+        </div>
+    </div>
+    <div class="form-container">
+        <form id="designForm" action="/design/generate" method="post">
+            <input type="hidden" id="templateId" name="templateId">
+            <div class="form-group">
+                <label for="requirements">Design Requirements:</label>
+                <textarea id="requirements" name="requirements"
+                          placeholder="Enter your design requirements (e.g., Create a login page with a blue background)"
+                          required></textarea>
+            </div>
+            <button type="submit">Generate Design</button>
+            <p th:if="${error}" class="error" th:text="${error}">Error message</p>
+        </form>
+        <button onclick="window.location.href='/templates'">Back to Templates</button>
+    </div>
+</div>
+
+<div class="loading-overlay" id="loadingOverlay">
+    <div class="loader"></div>
+</div>
+
+<div class="modal" id="previewModal">
+    <div class="modal-content">
+        <button class="close-btn" onclick="closeModal()">Close</button>
+        <iframe id="fullPreview"></iframe>
+    </div>
+</div>
+
+<script>
+    let selectedTemplate = null;
+
+    function selectTemplate(element) {
+        if (selectedTemplate) {
+            selectedTemplate.classList.remove('selected');
+        }
+        element.classList.add('selected');
+        selectedTemplate = element;
+        document.getElementById('templateId').value = element.getAttribute('data-id');
+    }
+
+    function showFullPreview(element) {
+        const content = element.getAttribute('data-content');
+        if (content) {
+            document.getElementById('fullPreview').setAttribute('srcdoc', content);
+            document.getElementById('previewModal').style.display = 'flex';
+        }
+    }
+
+    function closeModal() {
+        document.getElementById('previewModal').style.display = 'none';
+    }
+
+    document.querySelectorAll('.template-item').forEach(item => {
+        item.addEventListener('click', function(e) {
+            if (e.target.classList.contains('template-thumbnail') || e.target.classList.contains('template-name')) {
+                selectTemplate(this);
+            } else if (this.getAttribute('data-content')) {
+                showFullPreview(this);
+            }
+        });
+    });
+
+    document.getElementById('designForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+        if (!document.getElementById('templateId').value) {
+            alert('Please select a template');
+            return;
+        }
+        document.getElementById('loadingOverlay').style.display = 'flex';
+        this.submit();
+    });
+</script>
+</body>
+</html>
