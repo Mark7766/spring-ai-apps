@@ -10,6 +10,8 @@
 !**/src/main/**/target/
 !**/src/test/**/target/
 etl/docs/
+prototype-design/h2-data/
+prototype-design/templates/
 */generated
 */.DS_Store
 */*/.DS_Store
