@@ -1,0 +1,20 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+}
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+th, td {
+    border: 1px solid #ccc;
+    padding: 8px;
+    text-align: left;
+}
+button {
+    padding: 8px 16px;
+    margin: 5px;
+}
+textarea, select, input[type="file"] {
+    margin: 10px 0;
+}

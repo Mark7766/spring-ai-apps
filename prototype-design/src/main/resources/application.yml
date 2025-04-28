@@ -1,6 +1,9 @@
 server:
   port: 8081
 spring:
+  nacos:
+    config:
+      enabled: false
   application:
     name: "prototype-design"
   thymeleaf:
@@ -23,13 +26,31 @@ spring:
       max-file-size: 10MB
       max-request-size: 10MB
   ai:
+    openai:
+      api-key: ${SPRING_AI_OPENAI_API_KEY}
+      base-url: ${SPRING_AI_OPENAI_BASE_URL}
+      chat:
+        enabled: false
+        options:
+          model: ${SPRING_AI_OPENAI_CHAT_MODEL}
+          temperature: 0.7
+    dashscope:
+      api-key: ${BL_API_KEY}
+      read-timeout: 180
+      chat:
+        enabled: true
+        options:
+          #qwen-plus
+          model: qwen-max-latest
+      init:
+        pull-model-strategy: never
     azure:
       openai:
         api-key: ${AZURE_OPENAI_API_KEY}
         endpoint: ${AZURE_OPENAI_ENDPOINT}
         chat:
           model: gpt4o
-          enabled: true
+          enabled: false
     ollama:
       base-url: "http://localhost:11434"
       chat:

@@ -36,8 +36,7 @@ public class DesignService {
                         "Return only the complete HTML code without any explanations.",
                 templateContent, requirements
         );
-        log.info("Sending prompt to ChatModel, prompt length={}", prompt.length());
-
+        log.info("Sending prompt to ChatModel[{}:{}], prompt length={}",chatModel.toString(),chatModel.getDefaultOptions(), prompt.length());
         String rsp = chatModel.call(prompt);
         log.info("Received response from ChatModel, response length={}", rsp.length());
 
@@ -60,7 +59,7 @@ public class DesignService {
                         "Return only the complete HTML code without any explanations.",
                 currentDesign, adjustments
         );
-        log.info("Sending adjustment prompt to ChatModel, prompt length={}", prompt.length());
+        log.info("Sending adjustment prompt to ChatModel[{}:{}], prompt length={}",chatModel.toString(),chatModel.getDefaultOptions(), prompt.length());
 
         String rsp = chatModel.call(prompt);
         log.info("Received adjustment response from ChatModel, response length={}", rsp.length());
