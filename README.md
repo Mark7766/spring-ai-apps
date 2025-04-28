@@ -6,6 +6,7 @@
   - [chat-azure](chat-azure):基于azure的openai的大模型的聊天应用
   - [newston](newston):是一个智能编辑代理，每六个小时会，检索一次hark news的最新story，并挑选出AI和软件开发相关内容，并用中文总结，最后通过将汇总后的内容，以邮件形式发送给接收人。
   - [memory-llama](memory-llama):通过这个小demo，想让大家学习到Spring AI如何实现记忆功能和流式输出，发现记忆功能非常重要，可以和程序进行多轮沟通，寻求更好的答案
+  - [prototype-design](prototype-design):解决方案人员、产品经理，可以按照自己的想法，快速生成原型，本Demo主要基于Spring AI+Azure OpenAI/DeepSeek/Ollama，实现通过自然语言，基于模板，生成原型设计，让产品经理或者BA可以按照自己的想法生成原型
 - Embedding Models DEMO 
   - [embeddings-ollama](embeddings-ollama): ollama+qwen2.5的私有数据的向量化后的问答应用
 - Vector Databases DEMO 
