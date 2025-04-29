@@ -1,5 +1,6 @@
 package com.sandy.prototype.design;
 
+import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -53,12 +54,13 @@ public class DesignController {
     @PostMapping("/generate")
     public String generateDesign(@RequestParam("templateId") Long templateId,
                                  @RequestParam("requirements") String requirements,
+                                 @RequestParam("prototypeChatModel") PrototypeChatModel prototypeChatModel,
                                  Model model) {
         log.info("Received POST request to generate design with parameters: templateId={}, requirements={}",
                 templateId, requirements);
 
         try {
-            String generatedDesign = designService.generateDesign(templateId, requirements);
+            String generatedDesign = designService.generateDesign(templateId, requirements,prototypeChatModel);
             GeneratedDesign savedDesign = generatedDesignRepository.save(new GeneratedDesign(generatedDesign));
             log.info("Design generation successful, saved with UUID={}", savedDesign.getUuid());
             model.addAttribute("generatedDesign", generatedDesign);
@@ -80,7 +82,7 @@ public class DesignController {
                 request.getAdjustments(), request.getDesignUuid());
 
         try {
-            String adjustedDesign = designService.adjustDesign(request.getCurrentDesign(), request.getAdjustments());
+            String adjustedDesign = designService.adjustDesign(request.getCurrentDesign(), request.getAdjustments(),request.getPrototypeChatModel());
             GeneratedDesign design = generatedDesignRepository.findByUuid(request.getDesignUuid())
                     .orElseThrow(() -> new IllegalArgumentException("Design not found for UUID: " + request.getDesignUuid()));
             design.setHtmlContent(adjustedDesign);
@@ -112,17 +114,13 @@ public class DesignController {
     }
 
     // DTO for request
+    @Data
     public static class AdjustDesignRequest {
         private String currentDesign;
         private String adjustments;
         private String designUuid;
+        private PrototypeChatModel prototypeChatModel;
 
-        public String getCurrentDesign() { return currentDesign; }
-        public void setCurrentDesign(String currentDesign) { this.currentDesign = currentDesign; }
-        public String getAdjustments() { return adjustments; }
-        public void setAdjustments(String adjustments) { this.adjustments = adjustments; }
-        public String getDesignUuid() { return designUuid; }
-        public void setDesignUuid(String designUuid) { this.designUuid = designUuid; }
     }
 
     // DTO for response

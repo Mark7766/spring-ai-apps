@@ -17,12 +17,14 @@ import java.util.List;
 @Service
 @Slf4j
 public class DesignService {
-    @Autowired
-    private ChatModel chatModel;
+//    @Autowired
+//    private ChatModel chatModel;
     @Autowired
     private TemplateService templateService;
+    @Autowired
+    private ChatModeService chatModeService;
 
-    public String generateDesign(Long templateId, String requirements) throws IOException {
+    public String generateDesign(Long templateId, String requirements,PrototypeChatModel prototypeChatModel) throws IOException {
         log.info("Generating design for templateId={} with requirements={}", templateId, requirements);
 
         var template = templateService.getTemplateById(templateId);
@@ -36,6 +38,7 @@ public class DesignService {
                         "Return only the complete HTML code without any explanations.",
                 templateContent, requirements
         );
+        ChatModel chatModel = chatModeService.getChatModel(prototypeChatModel);
         log.info("Sending prompt to ChatModel[{}:{}], prompt length={}",chatModel.toString(),chatModel.getDefaultOptions(), prompt.length());
         String rsp = chatModel.call(prompt);
         log.info("Received response from ChatModel, response length={}", rsp.length());
@@ -49,7 +52,7 @@ public class DesignService {
         return cleanedRsp;
     }
 
-    public String adjustDesign(String currentDesign, String adjustments) {
+    public String adjustDesign(String currentDesign, String adjustments,PrototypeChatModel prototypeChatModel) {
         log.info("Adjusting design with adjustments={}", adjustments);
 
         String prompt = String.format(
@@ -59,6 +62,7 @@ public class DesignService {
                         "Return only the complete HTML code without any explanations.",
                 currentDesign, adjustments
         );
+        ChatModel chatModel = chatModeService.getChatModel(PrototypeChatModel.AZURE_GPT_4O);
         log.info("Sending adjustment prompt to ChatModel[{}:{}], prompt length={}",chatModel.toString(),chatModel.getDefaultOptions(), prompt.length());
 
         String rsp = chatModel.call(prompt);

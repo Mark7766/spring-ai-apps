@@ -169,6 +169,33 @@
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 16px;
+        }
+
+        select {
+            width: 100%;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid #415a77;
+            border-radius: 5px;
+            color: #ffffff;
+            font-size: 14px;
+            box-shadow: 0 0 10px rgba(65, 90, 119, 0.2);
+            font-family: 'Orbitron', sans-serif;
+            appearance: none;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="[invalid url, do not cite] width="12" height="12" fill="#778da9"><polygon points="0,0 12,0 6,12"/></svg>');
+            background-repeat: no-repeat;
+            background-position: right 10px center;
+        }
+
+        select:focus {
+            outline: none;
+            border-color: #778da9;
+            box-shadow: 0 0 15px rgba(65, 90, 119, 0.5);
+        }
     </style>
 </head>
 <body>
@@ -176,7 +203,21 @@
     <div class="left-panel">
         <h1>Generated Design</h1>
         <div class="form-group">
+            <label for="chatModel">Language Model:</label>
+            <select id="chatModel" required>
+                <option value="AZURE_GPT_4O" selected>Azure GPT-4o</option>
+                <option value="AZURE_GPT_4O_MINI">Azure GPT-4o Mini</option>
+                <option value="ALI_QWEN_MAX_LATEST">Ali Qwen Max Latest</option>
+                <option value="ALI_QWEN_PLUS">Ali Qwen Plus</option>
+                <option value="DEEPSEEK_CHAT">DeepSeek Chat</option>
+                <option value="OLLAMA_QWEN2_5">Ollama Qwen2.5</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="adjustments">Adjustments:</label>
             <textarea id="adjustments" placeholder="Enter adjustments (e.g., Change the background to red, add a header)"></textarea>
+        </div>
+        <div class="form-group">
             <button onclick="submitAdjustments()">Submit Adjustments</button>
         </div>
         <div class="form-group">
@@ -258,6 +299,7 @@
         const adjustments = document.getElementById('adjustments').value;
         const currentDesign = document.getElementById('designFrame').getAttribute('srcdoc');
         const designUuid = document.querySelector('button[data-uuid]').getAttribute('data-uuid');
+        const prototypeChatModel = document.getElementById('chatModel').value;
 
         if (!adjustments) {
             alert('Please enter adjustment requirements');
@@ -271,7 +313,7 @@
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ currentDesign, adjustments, designUuid })
+            body: JSON.stringify({ currentDesign, adjustments, designUuid, prototypeChatModel })
         })
         .then(response => response.json())
         .then(result => {

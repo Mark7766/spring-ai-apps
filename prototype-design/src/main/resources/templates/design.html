@@ -39,6 +39,7 @@
             white-space: nowrap;
             scrollbar-width: thin;
             scrollbar-color: #778da9 rgba(10, 25, 47, 0.8);
+             min-height: 300px;
         }
 
         .template-selector::-webkit-scrollbar {
@@ -126,6 +127,28 @@
             box-shadow: 0 0 10px rgba(65, 90, 119, 0.2);
             height: 150px;
             resize: vertical;
+        }
+
+        select {
+            width: 100%;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid #415a77;
+            border-radius: 5px;
+            color: #ffffff;
+            font-size: 14px;
+            box-shadow: 0 0 10px rgba(65, 90, 119, 0.2);
+            font-family: 'Orbitron', sans-serif;
+            appearance: none;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="#778da9"><polygon points="0,0 12,0 6,12"/></svg>');
+            background-repeat: no-repeat;
+            background-position: right 10px center;
+        }
+
+        select:focus {
+            outline: none;
+            border-color: #778da9;
+            box-shadow: 0 0 15px rgba(65, 90, 119, 0.5);
         }
 
         button {
@@ -238,6 +261,17 @@
     <div class="form-container">
         <form id="designForm" action="/design/generate" method="post">
             <input type="hidden" id="templateId" name="templateId">
+            <div class="form-group">
+                <label for="chatModel">Language Model:</label>
+                <select id="chatModel" name="prototypeChatModel" required>
+                    <option value="AZURE_GPT_4O" selected>Azure GPT-4o</option>
+                    <option value="AZURE_GPT_4O_MINI">Azure GPT-4o Mini</option>
+                    <option value="ALI_QWEN_MAX_LATEST">Ali Qwen Max Latest</option>
+                    <option value="ALI_QWEN_PLUS">Ali Qwen Plus</option>
+                    <option value="DEEPSEEK_CHAT">DeepSeek Chat</option>
+                    <option value="OLLAMA_QWEN2_5">Ollama Qwen2.5</option>
+                </select>
+            </div>
             <div class="form-group">
                 <label for="requirements">Design Requirements:</label>
                 <textarea id="requirements" name="requirements"

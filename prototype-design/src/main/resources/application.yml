@@ -38,10 +38,10 @@ spring:
       api-key: ${BL_API_KEY}
       read-timeout: 180
       chat:
-        enabled: true
+        enabled: false
         options:
-          #qwen-plus
-          model: qwen-max-latest
+          #qwen-plus qwen-max-latest
+          model: qwen-turbo-latest
       init:
         pull-model-strategy: never
     azure:
@@ -49,6 +49,7 @@ spring:
         api-key: ${AZURE_OPENAI_API_KEY}
         endpoint: ${AZURE_OPENAI_ENDPOINT}
         chat:
+          # gpt4o
           model: gpt4o
           enabled: false
     ollama:
