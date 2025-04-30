@@ -20,7 +20,7 @@ spring:
   h2:
     console:
       enabled: true
-      path: /h2-console # Optional: Customize the console path if needed
+      path: /h2-console # Optional: Customize the console path if needed  查看路径http://localhost:8081/h2-console
   servlet:
     multipart:
       max-file-size: 10MB

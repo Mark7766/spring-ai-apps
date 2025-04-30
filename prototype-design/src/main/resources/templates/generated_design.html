@@ -153,6 +153,7 @@
             justify-content: center;
             align-items: center;
             z-index: 500;
+            flex-direction: column; /* Added to stack loader and text vertically */
         }
 
         .loader {
@@ -164,7 +165,12 @@
             animation: spin 1s linear infinite;
             box-shadow: 0 0 20px rgba(65, 90, 119, 0.8);
         }
-
+        .loading-text {
+            margin-top: 15px;
+            font-size: 16px;
+            color: #ffffff;
+            text-shadow: 0 0 5px rgba(65, 90, 119, 0.5);
+        }
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
@@ -178,7 +184,7 @@
         select {
             width: 100%;
             padding: 10px;
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(13, 27, 42, 0.95);
             border: 1px solid #415a77;
             border-radius: 5px;
             color: #ffffff;
@@ -186,7 +192,7 @@
             box-shadow: 0 0 10px rgba(65, 90, 119, 0.2);
             font-family: 'Orbitron', sans-serif;
             appearance: none;
-            background-image: url('data:image/svg+xml;utf8,<svg xmlns="[invalid url, do not cite] width="12" height="12" fill="#778da9"><polygon points="0,0 12,0 6,12"/></svg>');
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="#778da9"><polygon points="0,0 12,0 6,12"/></svg>');
             background-repeat: no-repeat;
             background-position: right 10px center;
         }
@@ -195,6 +201,11 @@
             outline: none;
             border-color: #778da9;
             box-shadow: 0 0 15px rgba(65, 90, 119, 0.5);
+        }
+
+        select option {
+            background: #1b263b;
+            color: #ffffff;
         }
     </style>
 </head>
@@ -237,6 +248,7 @@
         <div class="iframe-container" id="iframeContainer">
             <div class="loading-overlay" id="loadingOverlay">
                 <div class="loader"></div>
+                <div class="loading-text">Prototype design adjusting...</div>
             </div>
             <iframe id="designFrame" th:attr="srcdoc=${generatedDesign}"></iframe>
         </div>
@@ -275,12 +287,12 @@
         newWindow.document.close();
     }
 
-    function zoomIn() {
+    function zoomOut() {
         scale += 0.1;
         document.getElementById('designFrame').style.transform = `scale(${scale})`;
     }
 
-    function zoomOut() {
+    function zoomIn() {
         scale = Math.max(0.5, scale - 0.1);
         document.getElementById('designFrame').style.transform = `scale(${scale})`;
     }

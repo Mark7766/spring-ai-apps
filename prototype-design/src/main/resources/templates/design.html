@@ -150,6 +150,10 @@
             border-color: #778da9;
             box-shadow: 0 0 15px rgba(65, 90, 119, 0.5);
         }
+        select option {
+            background: #1b263b;
+            color: #ffffff;
+        }
 
         button {
             padding: 10px 20px;
@@ -187,6 +191,7 @@
             justify-content: center;
             align-items: center;
             z-index: 1000;
+            flex-direction: column; /* Added to stack loader and text vertically */
         }
 
         .loader {
@@ -197,6 +202,12 @@
             height: 50px;
             animation: spin 1s linear infinite;
             box-shadow: 0 0 20px rgba(65, 90, 119, 0.8);
+        }
+        .loading-text {
+            margin-top: 15px;
+            font-size: 16px;
+            color: #ffffff;
+            text-shadow: 0 0 5px rgba(65, 90, 119, 0.5);
         }
 
         @keyframes spin {
@@ -287,6 +298,7 @@
 
 <div class="loading-overlay" id="loadingOverlay">
     <div class="loader"></div>
+    <div class="loading-text">Prototype design generating...</div>
 </div>
 
 <div class="modal" id="previewModal">
