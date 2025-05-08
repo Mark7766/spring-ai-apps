@@ -42,7 +42,7 @@ public class DesignService {
         log.info("Sending prompt to ChatModel[{}:{}], prompt length={}",chatModel.toString(),chatModel.getDefaultOptions(), prompt.length());
         String rsp = chatModel.call(prompt);
         log.info("Received response from ChatModel, response length={}", rsp.length());
-
+        rsp=null!=rsp?rsp.replaceAll("```html","").replaceAll("```",""):null;
         String cleanedRsp = rsp
                 .replaceAll("(?s)^```html\\n(.*?)\\n```$", "$1")
                 .replaceAll("(?s)^```\\n(.*?)\\n```$", "$1")
