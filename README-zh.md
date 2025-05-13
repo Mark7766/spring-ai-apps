@@ -1,5 +1,5 @@
 # spring-ai-apps  
-**[English](./README-zh.md)**  
+**[English](./README.md)**  
 这个是一个Spring AI小应用的集合，目的是帮忙大家轻松的学习如何应用Spring AI进行AI应用开发，减轻认知负担，每个小应用代码都很少，但框架都搭建好了，解决各种版本冲突的问题
 # Spring AI 小应用列表:
 | 类别             | 应用名称               | 描述                                                                                   |
