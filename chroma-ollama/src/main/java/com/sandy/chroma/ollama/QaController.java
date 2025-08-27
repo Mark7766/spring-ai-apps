@@ -1,7 +1,7 @@
 package com.sandy.chroma.ollama;
 
 import org.springframework.ai.chat.client.ChatClient;
-import org.springframework.ai.chat.client.advisor.QuestionAnswerAdvisor;
+import org.springframework.ai.chat.client.advisor.vectorstore.QuestionAnswerAdvisor;
 import org.springframework.ai.chat.model.ChatModel;
 import org.springframework.ai.chat.model.ChatResponse;
 import org.springframework.ai.chat.prompt.Prompt;
@@ -42,8 +42,7 @@ public class QaController {
 
         ChatResponse response = ChatClient.builder(chatModel)
                 .build().prompt()
-                .advisors(new QuestionAnswerAdvisor(this.vectorStore,
-                        SearchRequest.builder().similarityThreshold(0.8d).topK(6).build()))
+                .advisors(new QuestionAnswerAdvisor(this.vectorStore))
                 .user(question+",用中文回答")
                 .call()
                 .chatResponse();
