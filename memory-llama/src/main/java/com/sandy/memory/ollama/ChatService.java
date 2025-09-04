@@ -4,11 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.client.advisor.MessageChatMemoryAdvisor;
 import org.springframework.ai.chat.memory.ChatMemory;
-import org.springframework.ai.chat.memory.InMemoryChatMemory;
-import org.springframework.ai.chat.messages.Message;
-import org.springframework.ai.chat.messages.UserMessage;
-import org.springframework.ai.chat.model.StreamingChatModel;
-import org.springframework.ai.chat.prompt.Prompt;
+import org.springframework.ai.chat.memory.MessageWindowChatMemory;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 
@@ -20,14 +16,12 @@ public class ChatService {
 
     private static final int CHAT_HISTORY_WINDOW_SIZE = 1000;
     private final ChatClient.Builder chatClientBuilder;
-    private final StreamingChatModel streamingChatModel;
     private final ChatMemory chatMemory;
     private final Set<String> conversationIdSet = new HashSet<>();
 
-    public ChatService(ChatClient.Builder chatClientBuilder, StreamingChatModel streamingChatModel) {
+    public ChatService(ChatClient.Builder chatClientBuilder) {
         this.chatClientBuilder = chatClientBuilder;
-        this.streamingChatModel = streamingChatModel;
-        this.chatMemory = new InMemoryChatMemory();
+        this.chatMemory = MessageWindowChatMemory.builder().build();
     }
 
     public String createConversation() {
@@ -39,7 +33,7 @@ public class ChatService {
     public Flux<String> chat(String conversationId, String userMessage) {
         // 创建带有会话ID的ChatClient
         ChatClient chatClient = chatClientBuilder
-                .defaultAdvisors(new MessageChatMemoryAdvisor(chatMemory, conversationId, CHAT_HISTORY_WINDOW_SIZE))
+                .defaultAdvisors(MessageChatMemoryAdvisor.builder(chatMemory).build())
                 .build();
 
         // 保存用户消息并获取上下文
@@ -57,7 +51,7 @@ public class ChatService {
                 .doOnError(e -> log.error("Stream error for conversation {}: {}", conversationId, e.getMessage()));
     }
     public List<ChatMessage> getChatHistory(String conversationId) {
-        List<org.springframework.ai.chat.messages.Message> memoryMessages = chatMemory.get(conversationId, CHAT_HISTORY_WINDOW_SIZE);
+        List<org.springframework.ai.chat.messages.Message> memoryMessages = chatMemory.get(conversationId);
         List<ChatMessage> history = new ArrayList<>();
 
         for (org.springframework.ai.chat.messages.Message msg : memoryMessages) {

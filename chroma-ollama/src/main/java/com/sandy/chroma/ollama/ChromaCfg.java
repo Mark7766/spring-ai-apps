@@ -1,5 +1,6 @@
 package com.sandy.chroma.ollama;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.ai.chroma.vectorstore.ChromaApi;
 import org.springframework.ai.chroma.vectorstore.ChromaVectorStore;
 import org.springframework.ai.embedding.EmbeddingModel;
@@ -19,7 +20,7 @@ public class ChromaCfg {
     @Bean
     public ChromaApi chromaApi(RestClient.Builder restClientBuilder) {
         String chromaUrl = "http://localhost:8000";
-        ChromaApi chromaApi = new ChromaApi(chromaUrl, restClientBuilder);
+        ChromaApi chromaApi = new ChromaApi(chromaUrl, restClientBuilder,new ObjectMapper());
         return chromaApi;
     }
     @Bean

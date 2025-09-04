@@ -1,5 +1,6 @@
 package com.sandy.etl;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.chroma.vectorstore.ChromaApi;
@@ -36,7 +37,7 @@ public class ChromaCfg {
     @Bean
     public ChromaApi chromaApi(  RestClient.Builder restClientBuilder) {
         String chromaUrl = chromaHost + ":" + chromaPort;
-        return new ChromaApi(chromaUrl, restClientBuilder);
+        return new ChromaApi(chromaUrl, restClientBuilder,new ObjectMapper());
     }
     @Bean
     public ChromaVectorStore chromaVectorStore(EmbeddingModel embeddingModel, ChromaApi chromaApi) {
