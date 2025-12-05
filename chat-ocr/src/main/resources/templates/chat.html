@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${session.name} + ' - OCR Chat'">OCR Chat</title>
+    <link rel="stylesheet" th:href="@{/css/chat.css}">
+</head>
+<body>
+    <div class="app-container">
+        <!-- 左侧栏 - 会话列表 -->
+        <aside class="sidebar-left">
+            <div class="sidebar-header">
+                <h2>💬 对话</h2>
+                <div style="display: flex; gap: 4px;">
+                    <button class="theme-toggle" onclick="toggleTheme()" title="切换主题">
+                        <span id="themeIcon">☀️</span>
+                    </button>
+                    <button class="btn-icon" onclick="createNewSession()" title="新建会话">
+                        <svg viewBox="0 0 24 24" width="20" height="20">
+                            <path fill="currentColor" d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- 场景模板选择 -->
+            <div class="scenario-selector">
+                <select id="scenarioSelect" onchange="changeScenario(this.value)">
+                    <option th:each="sc : ${scenarios}"
+                            th:value="${sc}"
+                            th:text="${sc.displayName}"
+                            th:selected="${session.scenario != null && sc == session.scenario}">
+                    </option>
+                </select>
+            </div>
+
+            <!-- 会话列表 -->
+            <div class="session-list">
+                <div th:each="sess : ${allSessions}"
+                     th:classappend="${sess.id == session.id} ? 'active' : ''"
+                     class="session-item"
+                     th:data-session-id="${sess.id}">
+                    <div class="session-icon" th:text="${sess.scenario != null ? sess.scenario.icon : '📋'}">📋</div>
+                    <div class="session-info" onclick="navigateToSession(this.parentElement)">
+                        <div class="session-name" th:text="${sess.name}">会话名称</div>
+                        <div class="session-meta">
+                            <span th:text="${sess.messageCount} + ' 条消息'"></span>
+                            <span th:if="${sess.imageCount > 0}" th:text="${sess.imageCount} + ' 张图片'"></span>
+                        </div>
+                    </div>
+                    <button class="session-delete-btn" th:data-delete-session-id="${sess.id}" onclick="deleteSessionFromList(event, this.getAttribute('data-delete-session-id'))" title="删除会话">
+                        <svg viewBox="0 0 24 24" width="16" height="16">
+                            <path fill="currentColor" d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </aside>
+
+        <!-- 中间区 - 主交互区 -->
+        <main class="main-content">
+            <!-- 顶部工具栏 -->
+            <div class="toolbar">
+                <div class="scenario-info">
+                    <span class="scenario-icon" th:text="${session.scenario != null ? session.scenario.icon : '📋'}">📋</span>
+                    <span class="scenario-name" th:text="${session.scenario != null ? session.scenario.displayName : '场景'}">场景</span>
+                </div>
+                <div class="toolbar-actions">
+                    <button class="btn-toolbar" onclick="exportReport()" title="导出报告">
+                        <svg viewBox="0 0 24 24" width="18" height="18">
+                            <path fill="currentColor" d="M19 12v7H5v-7H3v7c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-7h-2zm-6 .67l2.59-2.58L17 11.5l-5 5-5-5 1.41-1.41L11 12.67V3h2v9.67z"/>
+                        </svg>
+                    </button>
+                    <button class="btn-toolbar" onclick="deleteSession()" title="删除会话">
+                        <svg viewBox="0 0 24 24" width="18" height="18">
+                            <path fill="currentColor" d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- 快捷操作 -->
+            <div class="quick-actions" th:if="${scenarioConfig != null && scenarioConfig.quickActions != null}">
+                <button th:each="action : ${#strings.arraySplit(scenarioConfig.quickActions, ',')}"
+                        class="btn-quick-action"
+                        th:text="${action}"
+                        th:data-action="${action}"
+                        onclick="quickActionHandler(this)">
+                </button>
+            </div>
+
+            <!-- 消息区域 -->
+            <div class="messages-area" id="messagesArea">
+                <div th:each="msg : ${messages}"
+                     th:classappend="${msg.role.name() == 'USER'} ? 'user' : 'assistant'"
+                     class="message">
+                    <div class="message-content">
+                        <div class="message-text" th:utext="${#strings.replace(msg.content, '&#10;', '<br>')}"></div>
+                        <div class="message-images" th:if="${msg.images != null && #lists.size(msg.images) > 0}">
+                            <img th:each="img : ${msg.images}"
+                                 th:src="@{/api/images/{sid}/{fname}(sid=${sessionId},fname=${img})}"
+                                 th:alt="${img}"
+                                 class="message-image"
+                                 onclick="viewImage(this.src)"
+                                 onerror="console.error('Failed to load image:', this.src, 'SessionId:', this.getAttribute('data-session-id'), 'Img:', this.alt); this.style.border='2px solid red'; this.alt='图片加载失败: ' + this.alt;"
+                                 th:attr="data-session-id=${sessionId},data-img-name=${img}">
+                        </div>
+                    </div>
+                    <div class="message-time" th:text="${#temporals.format(msg.timestamp, 'HH:mm')}"></div>
+                </div>
+            </div>
+
+            <!-- 输入区域 -->
+            <div class="input-area">
+                <div class="image-previews" id="imagePreviews"></div>
+                <div class="input-wrapper">
+                    <textarea id="messageInput"
+                              class="message-input"
+                              placeholder="请输入您的问题..."
+                              rows="1"></textarea>
+                    <div class="input-controls">
+                        <input type="file" id="fileInput" class="file-input" accept="image/*" multiple>
+                        <button class="btn-icon" onclick="document.getElementById('fileInput').click()" title="上传图片">
+                            <svg viewBox="0 0 24 24" width="20" height="20">
+                                <path fill="currentColor" d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/>
+                            </svg>
+                        </button>
+                        <button class="btn-send" id="sendBtn" onclick="sendMessage()" title="发送">
+                            <svg viewBox="0 0 24 24" width="20" height="20">
+                                <path fill="currentColor" d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- 右侧栏 - 图片预览区 -->
+        <aside class="sidebar-right">
+            <div class="sidebar-header">
+                <h3>📷 图片分析</h3>
+            </div>
+            <div class="image-viewer" id="imageViewer">
+                <div class="empty-state">
+                    <svg viewBox="0 0 24 24" width="48" height="48">
+                        <path fill="currentColor" opacity="0.3" d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/>
+                    </svg>
+                    <p>暂无图片</p>
+                </div>
+            </div>
+        </aside>
+    </div>
+
+    <!-- 全局变量 -->
+    <script th:inline="javascript">
+        const SESSION_ID = /*[[${sessionId}]]*/ '';
+        const SCENARIO = /*[[${session.scenario != null ? session.scenario : 'DESIGN'}]]*/ 'DESIGN';
+
+        // 主题管理函数（内联确保立即可用）
+        function initTheme() {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            applyTheme(savedTheme);
+        }
+
+        function applyTheme(theme) {
+            const root = document.documentElement;
+            const themeIcon = document.getElementById('themeIcon');
+
+            if (theme === 'light') {
+                root.setAttribute('data-theme', 'light');
+                if (themeIcon) themeIcon.textContent = '🌙';
+            } else {
+                root.removeAttribute('data-theme');
+                if (themeIcon) themeIcon.textContent = '☀️';
+            }
+
+            localStorage.setItem('theme', theme);
+        }
+
+        function toggleTheme() {
+            const root = document.documentElement;
+            const currentTheme = root.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+            applyTheme(currentTheme);
+        }
+
+        // 立即初始化主题
+        initTheme();
+    </script>
+
+    <script th:src="@{/js/chat.js}"></script>
+</body>
+</html>
+

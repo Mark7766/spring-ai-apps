@@ -1,0 +1,69 @@
+# Spring Boot 应用配置
+spring:
+  application:
+    name: chat-ocr
+
+  # Ollama AI 配置
+  ai:
+    ollama:
+      base-url: http://localhost:11434
+      chat:
+        options:
+          model: gemma3:12b
+          temperature: 0.7
+
+  # 文件上传配置
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 10MB
+      max-request-size: 50MB
+
+# 服务器配置
+server:
+  port: 8080
+
+# 聊天存储配置
+chat:
+  # 使用绝对路径，确保数据存储在项目目录下，不受Tomcat临时目录影响
+  storage-path: ${user.dir}/data
+
+  # 场景配置
+  scenarios:
+    # 设计图纸审核场景
+    design:
+      name: 设计图纸审核
+      icon: 📋
+      system-prompt: 你是一位专业的工程设计审查专家，擅长分析设计图纸、检查尺寸标注、验证设计规范。请以专业、准确的方式回答问题。
+      quick-actions: 尺寸核对,规范检查,BOM清单
+
+    # 医疗影像问诊场景
+    medical:
+      name: 医疗影像问诊
+      icon: 🏥
+      system-prompt: 你是一位医学影像分析助手，擅长识别和分析医疗影像资料。请以专业、严谨的态度回答，但请注意您不能替代专业医生诊断。
+      quick-actions: 病灶识别,测量计算,历史对比
+
+    # 设备故障诊断场景
+    equipment:
+      name: 设备故障诊断
+      icon: ⚙️
+      system-prompt: 你是一位设备维修专家，擅长通过图片和描述识别设备故障，并提供维修建议。请提供详细的故障分析和解决方案。
+      quick-actions: 故障定位,配件识别,维修建议
+
+# Spring Boot Actuator 配置
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+  endpoint:
+    health:
+      show-details: when-authorized
+
+# 日志配置
+logging:
+  level:
+    com.sandy.chat.ocr: INFO
+    org.springframework.ai: DEBUG
+
