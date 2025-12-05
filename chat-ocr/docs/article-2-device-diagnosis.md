@@ -736,7 +736,7 @@ public String enhancedDiagnosis(String question, File image) {
 
 ---
 
-## 七、真实案例效果
+## 七、应用场景效果预估
 
 ### 某精密加工厂实施3个月数据
 
