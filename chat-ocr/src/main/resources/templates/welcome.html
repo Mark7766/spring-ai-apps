@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OCR Chat - 欢迎</title>
+    <link rel="stylesheet" th:href="@{/css/chat.css}">
+    <style>
+        .welcome-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+        }
+
+        .welcome-card {
+            background: white;
+            border-radius: 20px;
+            padding: 60px 80px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 600px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .welcome-title {
+            font-size: 48px;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 16px;
+        }
+
+        .welcome-subtitle {
+            font-size: 18px;
+            color: #657786;
+            margin-bottom: 40px;
+        }
+
+        .scenario-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 16px;
+            margin-bottom: 40px;
+        }
+
+        .scenario-card {
+            padding: 24px;
+            border: 2px solid #e1e8ed;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: left;
+            background: white;
+        }
+
+        .scenario-card:hover {
+            border-color: #1d9bf0;
+            background: #f0f9ff;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(29, 155, 240, 0.2);
+        }
+
+        .scenario-card-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 8px;
+        }
+
+        .scenario-card-icon {
+            font-size: 32px;
+        }
+
+        .scenario-card-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1a1a1a;
+        }
+
+        .scenario-card-description {
+            font-size: 14px;
+            color: #657786;
+            line-height: 1.5;
+        }
+
+        .start-button {
+            padding: 16px 48px;
+            background: #1d9bf0;
+            color: white;
+            border: none;
+            border-radius: 28px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 12px rgba(29, 155, 240, 0.3);
+        }
+
+        .start-button:hover {
+            background: #1a8cd8;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(29, 155, 240, 0.4);
+        }
+
+        .footer-text {
+            margin-top: 40px;
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.8);
+        }
+    </style>
+</head>
+<body>
+    <div class="welcome-container">
+        <div class="welcome-card">
+            <div class="welcome-title">🎯 OCR Chat</div>
+            <div class="welcome-subtitle">智能图像识别与分析助手</div>
+
+            <div class="scenario-grid">
+                <div class="scenario-card" data-scenario="DESIGN" onclick="selectScenario('DESIGN')">
+                    <div class="scenario-card-header">
+                        <div class="scenario-card-icon">📋</div>
+                        <div class="scenario-card-title">设计图纸审核</div>
+                    </div>
+                    <div class="scenario-card-description">
+                        专业的建筑、工程图纸识别与分析，帮助您快速审核设计方案
+                    </div>
+                </div>
+
+                <div class="scenario-card" data-scenario="MEDICAL" onclick="selectScenario('MEDICAL')">
+                    <div class="scenario-card-header">
+                        <div class="scenario-card-icon">🏥</div>
+                        <div class="scenario-card-title">医学影像咨询</div>
+                    </div>
+                    <div class="scenario-card-description">
+                        医学影像智能分析，提供专业的初步诊断建议和参考意见
+                    </div>
+                </div>
+
+                <div class="scenario-card" data-scenario="EQUIPMENT" onclick="selectScenario('EQUIPMENT')">
+                    <div class="scenario-card-header">
+                        <div class="scenario-card-icon">⚙️</div>
+                        <div class="scenario-card-title">设备故障诊断</div>
+                    </div>
+                    <div class="scenario-card-description">
+                        快速识别设备故障现象，提供维修建议和解决方案
+                    </div>
+                </div>
+            </div>
+
+            <button class="start-button" onclick="startChat()">开始对话</button>
+        </div>
+
+        <div class="footer-text">
+            选择一个场景开始您的智能对话之旅
+        </div>
+    </div>
+
+    <script th:inline="javascript">
+        let selectedScenario = /*[[${selectedScenario}]]*/ 'DESIGN';
+
+        // 主题管理函数
+        function initTheme() {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            applyTheme(savedTheme);
+        }
+
+        function applyTheme(theme) {
+            const root = document.documentElement;
+            const themeIcon = document.getElementById('themeIcon');
+
+            if (theme === 'light') {
+                root.setAttribute('data-theme', 'light');
+                if (themeIcon) themeIcon.textContent = '🌙';
+            } else {
+                root.removeAttribute('data-theme');
+                if (themeIcon) themeIcon.textContent = '☀️';
+            }
+
+            localStorage.setItem('theme', theme);
+        }
+
+        function toggleTheme() {
+            const root = document.documentElement;
+            const currentTheme = root.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+            applyTheme(currentTheme);
+        }
+
+        function selectScenario(scenario) {
+            selectedScenario = scenario;
+
+            // 移除所有卡片的选中状态
+            document.querySelectorAll('.scenario-card').forEach(card => {
+                card.style.borderColor = 'var(--border-color)';
+                card.style.background = 'var(--bg-tertiary)';
+            });
+
+            // 添加选中状态
+            const selectedCard = document.querySelector(`[data-scenario="${scenario}"]`);
+            if (selectedCard) {
+                selectedCard.style.borderColor = 'var(--text-link)';
+                selectedCard.style.background = 'var(--bg-hover)';
+            }
+        }
+
+        function startChat() {
+            window.location.href = `/new?scenario=${selectedScenario}`;
+        }
+
+        // 立即初始化主题
+        initTheme();
+
+        // 初始化选中状态
+        document.addEventListener('DOMContentLoaded', function() {
+            selectScenario(selectedScenario);
+        });
+    </script>
+</body>
+</html>
+
