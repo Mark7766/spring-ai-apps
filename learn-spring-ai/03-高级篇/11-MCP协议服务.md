@@ -1,18 +1,18 @@
-# 第11期：MCP协议服务 - 构建可复用的AI工具生态
+# 第11期：MCP协议服务 - 用Java构建可复用的AI工具生态
 
 ## 📌 本期概述
 
 **核心问题：如何让AI工具模块化、可复用、易分享？**
 
-Model Context Protocol (MCP) 是一个开放的AI工具通信协议，它让你的AI工具可以像微服务一样独立部署、跨应用复用。本期将深入讲解MCP Server和Client的实现，构建时间工具服务，让AI能够远程调用你的工具。
+Model Context Protocol (MCP) 是一个开放的AI工具通信协议，它让你的AI工具可以像微服务一样独立部署、跨应用复用。本期将深入讲解如何**使用Java语言**通过Spring AI框架实现MCP Server和Client，构建时间工具服务，让AI能够远程调用你的工具。
 
 ## 🎯 学习目标
 
 完成本期学习后，你将能够：
 - ✅ 理解MCP协议的核心概念和工作原理
-- ✅ 使用Spring AI实现MCP Server服务
-- ✅ 开发MCP Client客户端应用
-- ✅ 实现工具的远程调用和编排
+- ✅ **用Java + Spring AI框架实现MCP Server服务**
+- ✅ **用Java开发MCP Client客户端应用**
+- ✅ **通过Java代码实现工具的远程调用和编排**
 - ✅ 掌握MCP服务的部署和集成
 - ✅ 构建可复用的AI工具生态
 
@@ -131,9 +131,9 @@ AI应用 (Client) → HTTP/SSE → 工具服务 (Server)
 
 ---
 
-## 2. MCP Server实现
+## 2. MCP Server实现（Java版本）
 
-现在开始构建MCP Server服务！
+现在开始用Java构建MCP Server服务！
 
 项目代码：[https://github.com/Mark7766/spring-ai-apps/tree/main/mcp-ollama/mcp-ollama-server](https://github.com/Mark7766/spring-ai-apps/tree/main/mcp-ollama/mcp-ollama-server)
 
@@ -343,9 +343,9 @@ SSE端点会保持连接，等待Client调用。
 
 ---
 
-## 3. MCP Client开发
+## 3. MCP Client开发（Java版本）
 
-现在开发Client应用，调用MCP Server的工具！
+现在用Java开发Client应用，调用MCP Server的工具！
 
 项目代码：[https://github.com/Mark7766/spring-ai-apps/tree/main/mcp-ollama/mcp-ollama-client](https://github.com/Mark7766/spring-ai-apps/tree/main/mcp-ollama/mcp-ollama-client)
 
@@ -572,9 +572,9 @@ public class McpServerProxy {
 
 ---
 
-## 4. 工具远程调用实战
+## 4. 工具远程调用实战（Java实现）
 
-### 4.1 创建Client控制器
+### 4.1 创建Java Client控制器
 
 ```java
 // 来自：https://github.com/Mark7766/spring-ai-apps/blob/main/mcp-ollama/mcp-ollama-client/src/main/java/com/sandy/mcp/ollama/client/ClientController.java
@@ -933,19 +933,19 @@ mcp-ollama/
 
 ## ⏭️ 下期预告
 
-恭喜你掌握了MCP协议！🎉 现在你可以构建可复用的AI工具生态了。
+恭喜你掌握了用Java开发MCP协议！🎉 现在你可以用Java构建可复用的AI工具生态了。
 
-**高级篇到此结束！** 下一期进入**实战篇**，我们将学习**智能Agent实战**，构建一个能自主规划、自动执行任务的智能代理！
+**高级篇到此结束！** 下一期进入**实战篇**，我们将学习**智能Agent实战**，用Java构建一个能自主规划、自动执行任务的智能代理！
 
 **下期亮点**：
-- 🤖 Agent智能体原理与架构
-- 🧠 ReAct思维链实现
-- 🔄 任务规划与执行循环
-- 🛠️ 多工具协同调用
-- 📊 Agent状态管理
-- 🎯 实战：自动化内容编辑助手
+- 🤖 Agent智能体原理与架构（Java实现）
+- 🧠 ReAct思维链Java实现
+- 🔄 任务规划与执行循环（Java编码）
+- 🛠️ 多工具协同调用（Java集成）
+- 📊 Agent状态管理（Java方案）
+- 🎯 实战：用Java开发自动化内容编辑助手
 
-从单一工具调用到智能Agent，让AI真正成为你的自动化助手！
+从单一工具调用到智能Agent，让Java生态中的AI真正成为你的自动化助手！
 
 敬请期待！
 
