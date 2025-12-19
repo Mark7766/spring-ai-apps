@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 import java.nio.channels.FileChannel;
 import java.nio.channels.FileLock;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
@@ -47,8 +48,31 @@ public class JsonFileStore {
         if (!Files.exists(path)) {
             return new ArrayList<>();
         }
-        return objectMapper.readValue(path.toFile(),
-                objectMapper.getTypeFactory().constructCollectionType(List.class, clazz));
+        try {
+            // 使用 UTF-8 编码读取文件
+            String content = Files.readString(path, StandardCharsets.UTF_8);
+            return objectMapper.readValue(content,
+                    objectMapper.getTypeFactory().constructCollectionType(List.class, clazz));
+        } catch (Exception e) {
+            log.error("Error reading list from file {}: {}", path, e.getMessage());
+            // 备份损坏的文件
+            backupCorruptedFile(path);
+            // 返回空列表
+            return new ArrayList<>();
+        }
+    }
+
+    /**
+     * 备份损坏的文件
+     */
+    private void backupCorruptedFile(Path path) {
+        try {
+            Path backupPath = path.getParent().resolve(path.getFileName() + ".corrupted." + System.currentTimeMillis());
+            Files.move(path, backupPath);
+            log.warn("Corrupted file backed up to: {}", backupPath);
+        } catch (IOException e) {
+            log.error("Failed to backup corrupted file: {}", path, e);
+        }
     }
     public <T> void writeList(Path path, List<T> list) throws IOException {
         write(path, list);

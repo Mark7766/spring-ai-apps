@@ -406,7 +406,29 @@ body {
     height: 100%;
     object-fit: cover;
     border-radius: 8px;
-    border: 1px solid #e1e8ed;
+    border: 1px solid var(--border-color);
+}
+
+/* PDF 预览样式 */
+.image-preview-item.pdf-preview {
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    background: var(--bg-tertiary);
+}
+
+.message-pdf {
+    display: inline-flex;
+    align-items: center;
+    padding: 8px 12px;
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    margin: 4px;
+}
+
+.message-pdf svg {
+    margin-right: 8px;
+    flex-shrink: 0;
 }
 
 .image-preview-remove {

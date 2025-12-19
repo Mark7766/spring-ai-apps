@@ -6,10 +6,11 @@ spring:
   # Ollama AI 配置
   ai:
     ollama:
-      base-url: http://localhost:11434
+      base-url:  http://127.0.0.1:11434  
       chat:
         options:
           model: gemma3:12b
+          num-keep: 0            # ⭐ 不保留历史上下文
           temperature: 0.7
 
   # 文件上传配置
@@ -17,7 +18,7 @@ spring:
     multipart:
       enabled: true
       max-file-size: 10MB
-      max-request-size: 50MB
+      max-request-size: 100MB  # 增加到100MB以支持多张图片上传
 
 # 服务器配置
 server:
@@ -34,21 +35,21 @@ chat:
     design:
       name: 设计图纸审核
       icon: 📋
-      system-prompt: 你是一位专业的工程设计审查专家，擅长分析设计图纸、检查尺寸标注、验证设计规范。请以专业、准确的方式回答问题。
+      system-prompt: 你是一位专业的工程设计审查专家，擅长分析设计图纸、检查尺寸标注、验证设计规范。当用户上传多张图片时，请仔细查看每张图片的细节，并给出综合评审意见，包括：各图纸之间的一致性、尺寸标注的完整性、设计规范的符合度等。请以专业、准确的方式回答问题。
       quick-actions: 尺寸核对,规范检查,BOM清单
 
     # 医疗影像问诊场景
     medical:
       name: 医疗影像问诊
       icon: 🏥
-      system-prompt: 你是一位医学影像分析助手，擅长识别和分析医疗影像资料。请以专业、严谨的态度回答，但请注意您不能替代专业医生诊断。
+      system-prompt: 你是一位医学影像分析助手，擅长识别和分析医疗影像资料。当用户上传多张影像时，请对比分析不同时间点或不同角度的影像，识别病灶变化趋势。请以专业、严谨的态度回答，但请注意您不能替代专业医生诊断，仅供参考。
       quick-actions: 病灶识别,测量计算,历史对比
 
     # 设备故障诊断场景
     equipment:
       name: 设备故障诊断
       icon: ⚙️
-      system-prompt: 你是一位设备维修专家，擅长通过图片和描述识别设备故障，并提供维修建议。请提供详细的故障分析和解决方案。
+      system-prompt: 你是一位设备维修专家，擅长通过图片和描述识别设备故障，并提供维修建议。当用户上传多张图片时，请从不同角度综合分析设备状态，识别故障原因，并提供详细的故障分析和解决方案。
       quick-actions: 故障定位,配件识别,维修建议
 
 # Spring Boot Actuator 配置

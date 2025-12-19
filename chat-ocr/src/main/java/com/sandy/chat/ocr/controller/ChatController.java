@@ -4,6 +4,7 @@ import com.sandy.chat.ocr.dto.ChatResponse;
 import com.sandy.chat.ocr.model.Message;
 import com.sandy.chat.ocr.service.MessageService;
 import com.sandy.chat.ocr.service.OcrChatService;
+import com.sandy.chat.ocr.service.PdfProcessingService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -21,26 +22,41 @@ public class ChatController {
 
     private final OcrChatService ocrChatService;
     private final MessageService messageService;
+    private final PdfProcessingService pdfProcessingService;
+
 
     @Autowired
-    public ChatController(OcrChatService ocrChatService, MessageService messageService) {
+    public ChatController(OcrChatService ocrChatService, MessageService messageService, PdfProcessingService pdfProcessingService) {
         this.ocrChatService = ocrChatService;
         this.messageService = messageService;
+        this.pdfProcessingService = pdfProcessingService;
     }
 
     /**
-     * 新版本：带会话的聊天接口
+     * 新版本：带会话的聊天接口，支持图片和 PDF
      */
     @PostMapping(value = "/chat/{sessionId}/message", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ChatResponse chatWithSession(
             @PathVariable String sessionId,
             @RequestParam("message") String message,
-            @RequestParam(value = "images", required = false) List<MultipartFile> images) {
+            @RequestParam(value = "images", required = false) List<MultipartFile> images,
+            @RequestParam(value = "pdf", required = false) MultipartFile pdf) {
 
-        log.info("Received chat request for session {} - message: {}, images count: {}",
-                sessionId, message, images != null ? images.size() : 0);
+        log.info("Received chat request for session {} - message: {}, images count: {}, pdf: {}",
+                sessionId, message, images != null ? images.size() : 0, pdf != null ? pdf.getOriginalFilename() : "none");
 
         try {
+            // 如果有 PDF 文件，转换为图片
+            if (pdf != null && !pdf.isEmpty() && pdfProcessingService.isPdfFile(pdf)) {
+                log.info("检测到 PDF 文件，开始转换: {}", pdf.getOriginalFilename());
+                List<OcrChatService.ImageData> pdfImages = pdfProcessingService.convertPdfToImages(pdf);
+
+                // 使用 PDF 转换的图片处理
+                String response = ocrChatService.processChatWithImageData(sessionId, message, pdfImages);
+                return new ChatResponse(response, true);
+            }
+
+            // 普通图片处理
             String response = ocrChatService.processChat(sessionId, message, images);
             return new ChatResponse(response, true);
         } catch (Exception e) {

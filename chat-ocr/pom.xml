@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>com.sandy</groupId>
 	<artifactId>chat-ocr</artifactId>
-	<version>1.0.0-rc1</version>
+	<version>1.0.0-rc2</version>
 	<name>chat-ocr</name>
 	<description>Chat OCR with Ollama DeepSeek OCR Model</description>
 	<properties>
@@ -44,6 +44,12 @@
 			<groupId>net.coobird</groupId>
 			<artifactId>thumbnailator</artifactId>
 			<version>0.4.20</version>
+		</dependency>
+		<!-- PDF 处理库 -->
+		<dependency>
+			<groupId>org.apache.pdfbox</groupId>
+			<artifactId>pdfbox</artifactId>
+			<version>3.0.0</version>
 		</dependency>
 		<!-- 监控和管理 -->
 		<dependency>

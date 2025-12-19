@@ -30,9 +30,19 @@ function initializeInputArea() {
     // 文件选择处理
     fileInput.addEventListener('change', function(e) {
         const files = Array.from(e.target.files);
+        console.log(`Selected ${files.length} file(s)`);
+
         files.forEach(file => {
+            console.log(`Processing file: ${file.name}, type: ${file.type}, size: ${file.size}`);
+
             if (file.type.startsWith('image/')) {
+                console.log(`Adding image preview: ${file.name}`);
                 addImagePreview(file);
+            } else if (file.type === 'application/pdf' || file.name.toLowerCase().endsWith('.pdf')) {
+                console.log(`Adding PDF preview: ${file.name}`);
+                addPdfPreview(file);
+            } else {
+                console.warn(`Unsupported file type: ${file.type} for ${file.name}`);
             }
         });
         // 清空input，允许重复选择同一文件
@@ -53,6 +63,7 @@ function initializeInputArea() {
 
 // 添加图片预览
 function addImagePreview(file) {
+    console.log(`addImagePreview called for: ${file.name}`);
     selectedImages.push(file);
 
     const reader = new FileReader();
@@ -72,12 +83,43 @@ function addImagePreview(file) {
         `;
 
         container.appendChild(previewItem);
+        console.log(`Image preview added at index ${index}`);
     };
     reader.readAsDataURL(file);
 }
 
+// 添加 PDF 预览
+function addPdfPreview(file) {
+    console.log(`addPdfPreview called for: ${file.name}`);
+    selectedImages.push(file);
+
+    const container = document.getElementById('imagePreviews');
+    const index = selectedImages.length - 1;
+
+    const previewItem = document.createElement('div');
+    previewItem.className = 'image-preview-item pdf-preview';
+    previewItem.innerHTML = `
+        <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; background: var(--bg-tertiary); border-radius: 8px; padding: 12px;">
+            <svg viewBox="0 0 24 24" width="32" height="32" style="color: #e53e3e; margin-bottom: 8px;">
+                <path fill="currentColor" d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zM6 20V4h7v5h5v11H6zm2-2h8v-2H8v2zm0-4h8v-2H8v2zm0-4h5V8H8v2z"/>
+            </svg>
+            <div style="font-size: 11px; color: var(--text-secondary); text-align: center; word-break: break-all; max-width: 100%;">${file.name}</div>
+            <div style="font-size: 10px; color: var(--text-tertiary); margin-top: 4px;">${(file.size / 1024).toFixed(1)} KB</div>
+        </div>
+        <button class="image-preview-remove" onclick="removeImage(${index})">
+            <svg viewBox="0 0 24 24">
+                <path fill="currentColor" d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+            </svg>
+        </button>
+    `;
+
+    container.appendChild(previewItem);
+    console.log(`PDF preview added at index ${index}, total files: ${selectedImages.length}`);
+}
+
 // 移除图片
 function removeImage(index) {
+    console.log(`Removing file at index ${index}`);
     selectedImages.splice(index, 1);
 
     // 重新渲染预览
@@ -85,12 +127,33 @@ function removeImage(index) {
     container.innerHTML = '';
 
     selectedImages.forEach((file, i) => {
-        const reader = new FileReader();
-        reader.onload = function(e) {
+        if (file.type.startsWith('image/')) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const previewItem = document.createElement('div');
+                previewItem.className = 'image-preview-item';
+                previewItem.innerHTML = `
+                    <img src="${e.target.result}" alt="预览">
+                    <button class="image-preview-remove" onclick="removeImage(${i})">
+                        <svg viewBox="0 0 24 24">
+                            <path fill="currentColor" d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+                        </svg>
+                    </button>
+                `;
+                container.appendChild(previewItem);
+            };
+            reader.readAsDataURL(file);
+        } else if (file.type === 'application/pdf' || file.name.toLowerCase().endsWith('.pdf')) {
             const previewItem = document.createElement('div');
-            previewItem.className = 'image-preview-item';
+            previewItem.className = 'image-preview-item pdf-preview';
             previewItem.innerHTML = `
-                <img src="${e.target.result}" alt="预览">
+                <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; background: var(--bg-tertiary); border-radius: 8px; padding: 12px;">
+                    <svg viewBox="0 0 24 24" width="32" height="32" style="color: #e53e3e; margin-bottom: 8px;">
+                        <path fill="currentColor" d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zM6 20V4h7v5h5v11H6zm2-2h8v-2H8v2zm0-4h8v-2H8v2zm0-4h5V8H8v2z"/>
+                    </svg>
+                    <div style="font-size: 11px; color: var(--text-secondary); text-align: center; word-break: break-all; max-width: 100%;">${file.name}</div>
+                    <div style="font-size: 10px; color: var(--text-tertiary); margin-top: 4px;">${(file.size / 1024).toFixed(1)} KB</div>
+                </div>
                 <button class="image-preview-remove" onclick="removeImage(${i})">
                     <svg viewBox="0 0 24 24">
                         <path fill="currentColor" d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
@@ -98,9 +161,9 @@ function removeImage(index) {
                 </button>
             `;
             container.appendChild(previewItem);
-        };
-        reader.readAsDataURL(file);
+        }
     });
+    console.log(`Files remaining: ${selectedImages.length}`);
 }
 
 // 发送消息
@@ -108,7 +171,10 @@ async function sendMessage() {
     const messageInput = document.getElementById('messageInput');
     const message = messageInput.value.trim();
 
+    console.log(`sendMessage called, message: "${message}", files: ${selectedImages.length}`);
+
     if (!message && selectedImages.length === 0) {
+        console.warn('No message or files to send');
         return;
     }
 
@@ -130,12 +196,40 @@ async function sendMessage() {
         const formData = new FormData();
         formData.append('message', message);
 
+        // 分离图片和 PDF
+        let pdfFile = null;
+        const imageFiles = [];
+
         selectedImages.forEach(file => {
+            if (file.type === 'application/pdf' || file.name.toLowerCase().endsWith('.pdf')) {
+                pdfFile = file;
+                console.log(`Found PDF file: ${file.name}`);
+            } else {
+                imageFiles.push(file);
+                console.log(`Found image file: ${file.name}`);
+            }
+        });
+
+        // 添加图片
+        imageFiles.forEach(file => {
             formData.append('images', file);
         });
 
+        // 添加 PDF（只支持一个 PDF）
+        if (pdfFile) {
+            formData.append('pdf', pdfFile);
+            console.log(`Uploading PDF: ${pdfFile.name}, size: ${pdfFile.size} bytes`);
+        }
+
+        console.log(`Sending request: ${imageFiles.length} image(s), ${pdfFile ? '1 PDF' : 'no PDF'}`);
+
         // 显示用户消息
         addUserMessage(message, selectedImages);
+
+        // 保存文件数量用于日志和提示
+        const fileCount = selectedImages.length;
+        const hasPdf = pdfFile !== null;
+        console.log(`Total files: ${fileCount}, has PDF: ${hasPdf}`);
 
         // 清空输入
         messageInput.value = '';
@@ -144,7 +238,7 @@ async function sendMessage() {
         document.getElementById('imagePreviews').innerHTML = '';
 
         // 显示加载指示器
-        addTypingIndicator();
+        addTypingIndicator(fileCount, hasPdf);
 
         // 发送请求
         const response = await fetch(`/api/chat/${sessionId}/message`, {
@@ -175,35 +269,63 @@ async function sendMessage() {
 }
 
 // 添加用户消息到界面
-function addUserMessage(text, images) {
+function addUserMessage(text, files) {
     const messagesArea = document.getElementById('messagesArea');
     const messageDiv = document.createElement('div');
     messageDiv.className = 'message user';
 
-    let imagesHtml = '';
-    if (images && images.length > 0) {
-        const imagePromises = images.map(file => {
-            return new Promise((resolve) => {
-                const reader = new FileReader();
-                reader.onload = (e) => resolve(e.target.result);
-                reader.readAsDataURL(file);
-            });
+    if (files && files.length > 0) {
+        const filePromises = files.map(file => {
+            if (file.type.startsWith('image/')) {
+                return new Promise((resolve) => {
+                    const reader = new FileReader();
+                    reader.onload = (e) => resolve({ type: 'image', data: e.target.result });
+                    reader.readAsDataURL(file);
+                });
+            } else if (file.type === 'application/pdf' || file.name.toLowerCase().endsWith('.pdf')) {
+                return Promise.resolve({
+                    type: 'pdf',
+                    name: file.name,
+                    size: (file.size / 1024).toFixed(1)
+                });
+            }
+            return Promise.resolve(null);
         });
 
-        Promise.all(imagePromises).then(dataUrls => {
-            imagesHtml = '<div class="message-images">';
-            dataUrls.forEach(url => {
-                imagesHtml += `<img src="${url}" class="message-image" onclick="viewImage(this.src)">`;
+        Promise.all(filePromises).then(fileData => {
+            let filesHtml = '<div class="message-images">';
+            fileData.forEach(data => {
+                if (data) {
+                    if (data.type === 'image') {
+                        filesHtml += `<img src="${data.data}" class="message-image" onclick="viewImage(this.src)">`;
+                    } else if (data.type === 'pdf') {
+                        filesHtml += `
+                            <div class="message-pdf" style="display: inline-flex; align-items: center; padding: 8px 12px; background: var(--bg-tertiary); border: 1px solid var(--border-color); border-radius: 8px; margin: 4px;">
+                                <svg viewBox="0 0 24 24" width="20" height="20" style="color: #e53e3e; margin-right: 8px; flex-shrink: 0;">
+                                    <path fill="currentColor" d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zM6 20V4h7v5h5v11H6zm2-2h8v-2H8v2zm0-4h8v-2H8v2zm0-4h5V8H8v2z"/>
+                                </svg>
+                                <div style="font-size: 12px;">
+                                    <div style="color: var(--text-primary); font-weight: 500;">${data.name}</div>
+                                    <div style="color: var(--text-secondary); font-size: 10px;">${data.size} KB</div>
+                                </div>
+                            </div>
+                        `;
+                    }
+                }
             });
-            imagesHtml += '</div>';
+            filesHtml += '</div>';
 
             messageDiv.innerHTML = `
                 <div class="message-content">
                     <div class="message-text">${escapeHtml(text)}</div>
-                    ${imagesHtml}
+                    ${filesHtml}
                 </div>
                 <div class="message-time">${getCurrentTime()}</div>
             `;
+
+            // 在 Promise 完成后再添加到 DOM
+            messagesArea.appendChild(messageDiv);
+            scrollToBottom();
         });
     } else {
         messageDiv.innerHTML = `
@@ -212,10 +334,9 @@ function addUserMessage(text, images) {
             </div>
             <div class="message-time">${getCurrentTime()}</div>
         `;
+        messagesArea.appendChild(messageDiv);
+        scrollToBottom();
     }
-
-    messagesArea.appendChild(messageDiv);
-    scrollToBottom();
 }
 
 // 添加AI消息
@@ -254,17 +375,26 @@ function addErrorMessage(text) {
 }
 
 // 添加加载指示器
-function addTypingIndicator() {
+function addTypingIndicator(imageCount) {
     const messagesArea = document.getElementById('messagesArea');
     const indicator = document.createElement('div');
     indicator.className = 'message assistant';
     indicator.id = 'typingIndicator';
+
+    let tipText = '正在思考中...';
+    if (imageCount && imageCount > 1) {
+        tipText = `正在分析 ${imageCount} 张图片，请稍候...`;
+    } else if (imageCount === 1) {
+        tipText = '正在分析图片，请稍候...';
+    }
+
     indicator.innerHTML = `
         <div class="typing-indicator">
             <div class="typing-dot"></div>
             <div class="typing-dot"></div>
             <div class="typing-dot"></div>
         </div>
+        <div style="font-size: 12px; color: var(--text-secondary); margin-top: 8px;">${tipText}</div>
     `;
     messagesArea.appendChild(indicator);
     scrollToBottom();
